@@ -1,81 +1,724 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📖 Bible Speak KJV</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap');
-        body {
-            font-family: 'Roboto', system-ui, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: white;
-            margin: 0;
-            padding: 15px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 700px;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        h1 {font-family:'Playfair Display',serif; text-align:center; margin:10px 0 5px; font-size:1.8em;}
-        .date {text-align:center; opacity:0.9; margin-bottom:15px; font-size:1.05em;}
-        .tabs {display:flex; background:rgba(255,255,255,0.2); border-radius:12px; padding:4px; margin:15px 0; overflow-x:auto;}
-        .tab {flex:1; padding:12px 8px; text-align:center; border-radius:10px; cursor:pointer; font-weight:500; white-space:nowrap; font-size:0.95em;}
-        .tab.active {background:#fbbf24; color:#1e3a8a;}
-        .content {display:none;}
-        .content.active {display:block;}
-        .declaration {background:rgba(255,255,255,0.15); padding:18px; margin:12px 0; border-radius:12px; border-left:5px solid #fbbf24; word-wrap:break-word;}
-        button {background:#fbbf24; color:#1e3a8a; border:none; padding:15px 30px; font-size:1.1em; font-weight:bold; border-radius:50px; display:block; margin:20px auto; width:90%; max-width:300px;}
-        footer {text-align:center; margin-top:25px; opacity:0.85; font-size:0.9em;}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bible Speak">
+<meta name="theme-color" content="#0a1628">
+<title>Bible Speak KJV</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-deep:  #060e1f;
+  --navy:       #0a1628;
+  --gold:       #c9a84c;
+  --gold-bright:#e8c96a;
+  --gold-pale:  #f5e4a8;
+  --text-main:  #eee8d5;
+  --text-dim:   #a89878;
+  --text-verse: #b8a882;
+  --border:     rgba(201,168,76,0.22);
+  --card-bg:    rgba(17,32,64,0.72);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'Crimson Pro', Georgia, serif; background: var(--navy-deep); color: var(--text-main); overflow-x: hidden; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(20,55,120,0.65) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 45% at 85% 95%, rgba(10,28,68,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 110% 90% at 15% 105%, rgba(6,14,31,0.85) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 7%,  rgba(245,228,168,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 33% 13%, rgba(245,228,168,0.35) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 63% 4%, rgba(245,228,168,0.65) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 18%, rgba(245,228,168,0.28) 0%, transparent 100%),
+    radial-gradient(1px 1px at 4%  34%, rgba(245,228,168,0.45) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 92% 42%, rgba(245,228,168,0.38) 0%, transparent 100%),
+    radial-gradient(1px 1px at 47% 52%, rgba(245,228,168,0.28) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 70%, rgba(245,228,168,0.38) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 73% 78%, rgba(245,228,168,0.48) 0%, transparent 100%),
+    radial-gradient(1px 1px at 54% 88%, rgba(245,228,168,0.28) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 62%, rgba(245,228,168,0.32) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 30%, rgba(245,228,168,0.22) 0%, transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+#app {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  min-height: 100vh; min-height: -webkit-fill-available;
+  max-width: 480px; margin: 0 auto;
+}
+header {
+  text-align: center; padding: 28px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(6,14,31,0.97) 0%, rgba(10,20,42,0.88) 100%);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 100;
+}
+.crown { font-size: 18px; letter-spacing: 6px; color: var(--gold); margin-bottom: 4px; display: block; }
+header h1 {
+  font-family: 'Cinzel', serif; font-size: 21px; font-weight: 700; letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-pale) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-transform: uppercase; line-height: 1.2; margin-bottom: 2px;
+}
+header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); letter-spacing: 2px; }
+#today-date { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; color: var(--gold); opacity: 0.75; margin-top: 5px; display: block; }
+.divider-line { width: 50px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 6px auto 0; }
+
+/* TABS */
+.tabs {
+  display: flex; background: rgba(6,14,31,0.93);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 0 0 auto; min-width: 68px; padding: 10px 8px 8px;
+  background: none; border: none; color: var(--text-dim);
+  font-family: 'Cinzel', serif; font-size: 7.5px; font-weight: 600;
+  letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  border-bottom: 2px solid transparent;
+  position: relative; white-space: nowrap; line-height: 1.5;
+}
+.tab-btn .tab-icon { display: block; font-size: 16px; margin-bottom: 2px; }
+.tab-btn.active { color: var(--gold-bright); border-bottom-color: var(--gold); }
+.tab-btn.active::after {
+  content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; background: var(--gold); border-radius: 50%;
+}
+
+/* PANELS */
+.tab-content { display: none; padding: 18px 16px 110px; animation: fadeUp 0.32s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.panel-header { text-align: center; margin-bottom: 6px; }
+.panel-title { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; color: var(--gold-bright); letter-spacing: 2px; margin-bottom: 3px; }
+.panel-subtitle { font-style: italic; font-size: 13px; color: var(--text-dim); }
+
+.declare-prompt {
+  background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 8px; padding: 9px 13px; margin: 10px 0 16px;
+  font-size: 12px; font-style: italic; color: var(--text-dim); text-align: center; line-height: 1.5;
+}
+.declare-prompt strong { color: var(--gold); font-style: normal; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 1px; }
+
+/* SITUATION GRID — for the "In This Moment" tab */
+.situation-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin: 10px 0 18px;
+}
+.sit-btn {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 8px;
+  cursor: pointer; text-align: center;
+  transition: border-color 0.2s, transform 0.15s, background 0.2s;
+  -webkit-appearance: none;
+}
+.sit-btn:active { transform: scale(0.96); }
+.sit-btn.selected {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.12);
+}
+.sit-btn .sit-icon { font-size: 22px; display: block; margin-bottom: 5px; }
+.sit-btn .sit-label {
+  font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); line-height: 1.4;
+}
+.sit-btn.selected .sit-label { color: var(--gold-bright); }
+
+/* VERSE CARD */
+.verse-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 16px 16px; margin-bottom: 16px;
+  position: relative; overflow: hidden;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: transform 0.18s ease;
+}
+.verse-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.6;
+}
+.verse-card:active { transform: scale(0.985); }
+.declaration-tag {
+  display: inline-block; font-size: 10px; font-family: 'Cinzel', serif;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy-deep);
+  background: var(--gold); padding: 2px 8px; border-radius: 20px; margin-bottom: 11px; font-weight: 600;
+}
+.tag-protection { background: #7eb8f7; }
+.tag-authority  { background: #f77e7e; }
+.tag-favor      { background: #e8c96a; }
+.tag-strength   { background: #f7a97e; }
+.tag-provision  { background: #7ef7a4; }
+.tag-healing    { background: #7ef7d4; }
+.tag-peace      { background: #c9a0f0; color: #1a0a2e; }
+.tag-identity   { background: #a0d4f0; }
+.tag-promise    { background: #e8c96a; }
+.tag-praise     { background: #f7e27e; }
+.tag-rest       { background: #7ecef7; }
+.tag-trust      { background: #c9a84c; }
+.tag-victory    { background: #f79e7e; }
+.tag-wisdom     { background: #b8f07e; }
+.tag-courage    { background: #f0b87e; }
+.tag-comfort    { background: #d4a0f0; color: #1a0a2e; }
+.tag-gratitude  { background: #f7e27e; }
+.tag-direction  { background: #7ef7c4; }
+.tag-broken     { background: #c4a0d4; color: #1a0a2e; }
+.tag-anger      { background: #f0a07e; }
+.tag-control    { background: #a0c4f0; }
+.tag-restore    { background: #a0f0c4; }
+
+.decl-text { font-size: 19px; line-height: 1.65; color: var(--text-main); font-weight: 400; margin-bottom: 14px; letter-spacing: 0.2px; }
+.scripture-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.scripture-divider::before, .scripture-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+.scripture-label { font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; white-space: nowrap; }
+.scripture-text { font-size: 13.5px; line-height: 1.6; color: var(--text-verse); font-style: italic; font-weight: 300; margin-bottom: 9px; }
+.verse-ref { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 1.5px; color: var(--gold); text-align: right; opacity: 0.85; }
+
+.refresh-wrap { text-align: center; margin-top: 6px; }
+.refresh-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.18) 0%, rgba(201,168,76,0.08) 100%);
+  border: 1px solid var(--gold); color: var(--gold-bright);
+  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 12px 22px; border-radius: 40px; cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s; -webkit-appearance: none;
+}
+.refresh-btn:active { transform: scale(0.95); background: rgba(201,168,76,0.28); box-shadow: 0 0 20px rgba(201,168,76,0.2); }
+.spin { display: inline-block; transition: transform 0.45s ease; }
+.refresh-btn:active .spin { transform: rotate(180deg); }
+
+/* moment verses area */
+#moment-verses { display: none; }
+#moment-verses.visible { display: block; }
+.moment-title {
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600;
+  color: var(--gold-bright); letter-spacing: 2px; text-align: center;
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>📖 Bible Speak KJV</h1>
-        <p class="date" id="date"></p>
+<div id="app">
+  <header>
+    <span class="crown">✦ ✦ ✦</span>
+    <h1>Bible Speak</h1>
+    <p class="subtitle">King James Version</p>
+    <span id="today-date"></span>
+    <div class="divider-line"></div>
+  </header>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab(0)">Morning</div>
-            <div class="tab" onclick="switchTab(1)">Prayers</div>
-            <div class="tab" onclick="switchTab(2)">Praises</div>
-            <div class="tab" onclick="switchTab(3)">Evening</div>
-        </div>
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="switchTab('morning')" id="tab-morning"><span class="tab-icon">🌅</span>Morning</button>
+    <button class="tab-btn" onclick="switchTab('prayers')" id="tab-prayers"><span class="tab-icon">🙏</span>Prayers</button>
+    <button class="tab-btn" onclick="switchTab('praises')" id="tab-praises"><span class="tab-icon">🕊️</span>Praises</button>
+    <button class="tab-btn" onclick="switchTab('evening')" id="tab-evening"><span class="tab-icon">🌙</span>Evening</button>
+    <button class="tab-btn" onclick="switchTab('moment')" id="tab-moment"><span class="tab-icon">⚡</span>Moment</button>
+  </nav>
 
-        <div id="content-0" class="content active"><div id="morning"></div><button onclick="generateMorning()">New Morning</button></div>
-        <div id="content-1" class="content"><div id="prayers"></div><button onclick="generatePrayers()">New Prayers</button></div>
-        <div id="content-2" class="content"><div id="praises"></div><button onclick="generatePraises()">New Praises</button></div>
-        <div id="content-3" class="content"><div id="evening"></div><button onclick="generateEvening()">New Evening</button></div>
+  <!-- MORNING -->
+  <div class="tab-content active" id="panel-morning">
+    <div class="panel-header"><div class="panel-title">Morning Declarations</div><div class="panel-subtitle">Command your day with God&#8217;s Word</div></div>
+    <div class="declare-prompt"><strong>Speak these aloud.</strong> Read the declaration boldly in your own voice. The scripture beneath it is the Word of God it stands on.</div>
+    <div id="verses-morning"></div>
+    <div class="refresh-wrap"><button class="refresh-btn" onclick="loadVerses('morning')"><span class="spin">&#8635;</span> New Declarations</button></div>
+  </div>
 
-        <footer>King James Version Inspired • Speak with faith</footer>
+  <!-- PRAYERS -->
+  <div class="tab-content" id="panel-prayers">
+    <div class="panel-header"><div class="panel-title">Prayers &amp; Requests</div><div class="panel-subtitle">Stand on His covenant promises</div></div>
+    <div class="declare-prompt"><strong>Pray His Word back to Him.</strong> Speak the declaration with faith, then present your request. God is bound by what He has spoken.</div>
+    <div id="verses-prayers"></div>
+    <div class="refresh-wrap"><button class="refresh-btn" onclick="loadVerses('prayers')"><span class="spin">&#8635;</span> New Prayers</button></div>
+  </div>
+
+  <!-- PRAISES -->
+  <div class="tab-content" id="panel-praises">
+    <div class="panel-header"><div class="panel-title">Praises &amp; Worship</div><div class="panel-subtitle">Declare who He is over your life</div></div>
+    <div class="declare-prompt"><strong>Lift these up with your voice.</strong> Praise is a declaration. When you speak who God is, you release His power and confound the enemy.</div>
+    <div id="verses-praises"></div>
+    <div class="refresh-wrap"><button class="refresh-btn" onclick="loadVerses('praises')"><span class="spin">&#8635;</span> New Praises</button></div>
+  </div>
+
+  <!-- EVENING -->
+  <div class="tab-content" id="panel-evening">
+    <div class="panel-header"><div class="panel-title">Evening Reflections</div><div class="panel-subtitle">Commend your night to His keeping</div></div>
+    <div class="declare-prompt"><strong>Speak these before you sleep.</strong> Release your day and every burden. His angels are on watch. He gives His beloved rest.</div>
+    <div id="verses-evening"></div>
+    <div class="refresh-wrap"><button class="refresh-btn" onclick="loadVerses('evening')"><span class="spin">&#8635;</span> New Reflections</button></div>
+  </div>
+
+  <!-- IN THIS MOMENT -->
+  <div class="tab-content" id="panel-moment">
+    <div class="panel-header"><div class="panel-title">In This Moment</div><div class="panel-subtitle">Find the Word for where you are right now</div></div>
+    <div class="declare-prompt"><strong>Choose your situation.</strong> Tap what you are facing right now and receive declarations specifically for this moment.</div>
+
+    <div class="situation-grid">
+      <button class="sit-btn" onclick="selectSituation('sick')" id="sit-sick">
+        <span class="sit-icon">🤒</span><span class="sit-label">When I Am Sick</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('worried')" id="sit-worried">
+        <span class="sit-icon">😰</span><span class="sit-label">When I Am Worried</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('broken')" id="sit-broken">
+        <span class="sit-icon">💔</span><span class="sit-label">When I Am Broken</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('financial')" id="sit-financial">
+        <span class="sit-icon">💸</span><span class="sit-label">Financial Need</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('angry')" id="sit-angry">
+        <span class="sit-icon">😤</span><span class="sit-label">When I Am Angry</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('grateful')" id="sit-grateful">
+        <span class="sit-icon">🙌</span><span class="sit-label">When I Am Grateful</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('courage')" id="sit-courage">
+        <span class="sit-icon">🦁</span><span class="sit-label">When I Need Courage</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('outofcontrol')" id="sit-outofcontrol">
+        <span class="sit-icon">🌪️</span><span class="sit-label">Out of Control</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('direction')" id="sit-direction">
+        <span class="sit-icon">🧭</span><span class="sit-label">Need Direction</span>
+      </button>
+      <button class="sit-btn" onclick="selectSituation('restore')" id="sit-restore">
+        <span class="sit-icon">🤝</span><span class="sit-label">Need Restoration</span>
+      </button>
     </div>
 
-    <script>
-        document.getElementById('date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-        const morningDB = [{t:"Praise",txt:"This is the day which the LORD hath made; I will rejoice and be glad in it.",ref:"Psalm 118:24"},{t:"Mercies",txt:"It is of the LORD'S mercies... they are new every morning.",ref:"Lamentations 3:22-23"},{t:"Seeking",txt:"Early will I seek thee, O God...",ref:"Psalm 63:1"}];
-        const prayersDB = [{t:"Wisdom",txt:"If any of you lack wisdom, let him ask of God...",ref:"James 1:5"},{t:"Protection",txt:"The LORD is my light... whom shall I fear?",ref:"Psalm 27:1"},{t:"Provision",txt:"My God shall supply all my need...",ref:"Philippians 4:19"}];
-        const praisesDB = [{t:"Holy",txt:"Holy, holy, holy, is the LORD of hosts...",ref:"Isaiah 6:3"},{t:"Greatness",txt:"O LORD our Lord, how excellent is thy name...",ref:"Psalm 8:1"}];
-        const eveningDB = [{t:"Rest",txt:"I will both lay me down in peace...",ref:"Psalm 4:8"},{t:"Thankful",txt:"It is a good thing to give thanks unto the LORD...",ref:"Psalm 92:1"}];
+    <div id="moment-verses">
+      <div class="moment-title" id="moment-title"></div>
+      <div id="verses-moment"></div>
+      <div class="refresh-wrap"><button class="refresh-btn" onclick="refreshMoment()"><span class="spin">&#8635;</span> New Declarations</button></div>
+    </div>
+  </div>
+</div>
 
-        function generateSection(id, db) {
-            const c = document.getElementById(id); c.innerHTML = '';
-            [...db].sort(() => Math.random()-0.5).slice(0,4).forEach(d => {
-                const div = document.createElement('div'); div.className = 'declaration';
-                div.innerHTML = `<strong>${d.t}</strong><p>"${d.txt}"</p><p class="verse">— ${d.ref}</p>`;
-                c.appendChild(div);
-            });
-        }
-        function generateMorning(){generateSection('morning',morningDB);}
-        function generatePrayers(){generateSection('prayers',prayersDB);}
-        function generatePraises(){generateSection('praises',praisesDB);}
-        function generateEvening(){generateSection('evening',eveningDB);}
-        function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n)); document.querySelectorAll('.content').forEach((c,i)=>c.classList.toggle('active',i===n));}
-        window.onload = () => {generateMorning(); generatePrayers(); generatePraises(); generateEvening();};
-    </script>
+<script>
+// DATE
+(function(){
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var n=new Date();
+  document.getElementById('today-date').textContent=days[n.getDay()]+' \u00B7 '+months[n.getMonth()]+' '+n.getDate()+', '+n.getFullYear();
+})();
+
+var currentSituation = null;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VERSE DATA
+// ─────────────────────────────────────────────────────────────────────────────
+var VERSES = {
+
+// ═══════════════════════════════════════════════════════════ MORNING (62) ════
+morning:[
+{decl:"I take authority over this day in the name of Jesus. I command this morning to align with the purposes of God for my life. This day will cooperate with me, favor me, and bring forth the blessing of the Lord!",verse:"Hast thou commanded the morning since thy days began, and caused the dayspring to know his place?",ref:"Job 38:12",tag:"Authority",cls:"tag-authority"},
+{decl:"I decree and declare blessings over my life today. I speak it by faith and it is established. Light shines upon every path I walk \u2014 no darkness can stand before me. What I decree, God establishes!",verse:"Thou shalt also decree a thing, and it shall be established unto thee: and the light shall shine upon thy ways.",ref:"Job 22:28",tag:"Authority",cls:"tag-authority"},
+{decl:"I have been given authority over all the power of the enemy. No serpent, no scheme, no weapon formed in hell can harm me today. I walk in the complete victory of Jesus Christ!",verse:"Behold, I give unto you power to tread on serpents and scorpions, and over all the power of the enemy: and nothing shall by any means hurt you.",ref:"Luke 10:19",tag:"Authority",cls:"tag-authority"},
+{decl:"I bind every force of darkness assigned against me today and I loose the blessings, favor, and peace of God over my life. What I bind is bound in heaven. What I loose is loosed. In Jesus\u2019 name!",verse:"Whatsoever ye shall bind on earth shall be bound in heaven: and whatsoever ye shall loose on earth shall be loosed in heaven.",ref:"Matthew 18:18",tag:"Authority",cls:"tag-authority"},
+{decl:"No weapon formed against me shall prosper \u2014 not in my finances, not in my health, not in my family, not in my work. Every tongue that rises against me I condemn. This is my heritage as a servant of the Lord!",verse:"No weapon that is formed against thee shall prosper; and every tongue that shall rise against thee in judgment thou shalt condemn. This is the heritage of the servants of the LORD.",ref:"Isaiah 54:17",tag:"Authority",cls:"tag-authority"},
+{decl:"I am seated with Christ in heavenly places, far above all principality and power. I operate from a position of victory today, not defeat. The enemy is beneath my feet!",verse:"And hath raised us up together, and made us sit together in heavenly places in Christ Jesus.",ref:"Ephesians 2:6",tag:"Authority",cls:"tag-authority"},
+{decl:"Greater is He that is in me than he that is in the world. The Holy Spirit inside me is greater than any force I will face today. I do not shrink back \u2014 I advance, because the Greater One lives in me!",verse:"Ye are of God, little children, and have overcome them: because greater is he that is in you, than he that is in the world.",ref:"1 John 4:4",tag:"Authority",cls:"tag-authority"},
+{decl:"I am more than a conqueror through Christ who loves me. I do not merely survive today \u2014 I conquer. Every challenge, every obstacle, every attack is overcome because Christ is in me!",verse:"Nay, in all these things we are more than conquerors through him that loved us.",ref:"Romans 8:37",tag:"Victory",cls:"tag-victory"},
+{decl:"I have the mind of Christ today. My thoughts are clear, my decisions are sound, and my understanding is illuminated by the Holy Spirit. I think with the wisdom of God, not the confusion of this world!",verse:"For who hath known the mind of the Lord, that he may instruct him? But we have the mind of Christ.",ref:"1 Corinthians 2:16",tag:"Wisdom",cls:"tag-wisdom"},
+{decl:"I dwell in the secret place of the Most High God and I abide under the shadow of the Almighty. He is my refuge and my fortress. He is my God and in Him I place all my trust today!",verse:"He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty. I will say of the LORD, He is my refuge and my fortress: my God; in him will I trust.",ref:"Psalm 91:1\u20132",tag:"Protection",cls:"tag-protection"},
+{decl:"God delivers me from every trap and every plague. He covers me with His feathers and I am safe beneath His wings. His faithfulness is my shield and my armor today!",verse:"Surely he shall deliver thee from the snare of the fowler, and from the noisome pestilence. He shall cover thee with his feathers, and under his wings shalt thou trust.",ref:"Psalm 91:3\u20134",tag:"Protection",cls:"tag-protection"},
+{decl:"I will not fear what comes against me today. A thousand may fall at my side but it will not come near me. I am covered by God and I walk in perfect safety!",verse:"Thou shalt not be afraid for the terror by night; nor for the arrow that flieth by day; nor for the pestilence that walketh in darkness; nor for the destruction that wasteth at noonday.",ref:"Psalm 91:5\u20136",tag:"Protection",cls:"tag-protection"},
+{decl:"No evil will befall me today and no plague will come near my home. God has commanded His angels to keep charge over me. They surround me, they protect me, and they keep my every step!",verse:"There shall no evil befall thee, neither shall any plague come nigh thy dwelling. For he shall give his angels charge over thee, to keep thee in all thy ways.",ref:"Psalm 91:10\u201311",tag:"Protection",cls:"tag-protection"},
+{decl:"The Lord is my light and my salvation \u2014 I have nothing to fear. He is the strength of my life \u2014 no person, no power, no principality can stand against me. I am protected by Almighty God!",verse:"The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?",ref:"Psalm 27:1",tag:"Protection",cls:"tag-protection"},
+{decl:"The angel of the Lord encamps around me right now. As I go out today I am surrounded by the host of heaven. I walk in divine protection everywhere my feet tread!",verse:"The angel of the LORD encampeth round about them that fear him, and delivereth them.",ref:"Psalm 34:7",tag:"Protection",cls:"tag-protection"},
+{decl:"When I pass through deep waters God is with me. When I walk through fire I will not be burned. No flood will overflow me and no flame will kindle upon me. God goes before me today!",verse:"When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee: when thou walkest through the fire, thou shalt not be burned.",ref:"Isaiah 43:2",tag:"Protection",cls:"tag-protection"},
+{decl:"The Lord preserves my going out and my coming in from this moment and for evermore. Every step I take today is covered. I leave protected and I return protected. In Jesus\u2019 name!",verse:"The LORD shall preserve thy going out and thy coming in from this time forth, and even for evermore.",ref:"Psalm 121:8",tag:"Protection",cls:"tag-protection"},
+{decl:"The Lord is my rock, my fortress, and my deliverer. He is my strength, my shield, my high tower. I run to Him today and I am safe. Nothing can breach the fortress of God!",verse:"The LORD is my rock, and my fortress, and my deliverer; my God, my strength, in whom I will trust; my buckler, and the horn of my salvation, and my high tower.",ref:"Psalm 18:2",tag:"Protection",cls:"tag-protection"},
+{decl:"God is my refuge and my strength, a very present help in times of trouble. Therefore I will not fear. God is here, He is present, and He is more than enough!",verse:"God is our refuge and strength, a very present help in trouble. Therefore will not we fear, though the earth be removed.",ref:"Psalm 46:1\u20132",tag:"Protection",cls:"tag-protection"},
+{decl:"The favor of God surrounds me like a shield today. Wherever I go people will show me kindness. Doors will open that no man can shut. I walk in supernatural favor all day long!",verse:"For thou, LORD, wilt bless the righteous; with favour wilt thou compass him as with a shield.",ref:"Psalm 5:12",tag:"Favor",cls:"tag-favor"},
+{decl:"God withholds no good thing from me as I walk uprightly before Him. His grace and His glory are upon my life. Everything I need He provides. No good thing is withheld from me!",verse:"The LORD will give grace and glory: no good thing will he withhold from them that walk uprightly.",ref:"Psalm 84:11",tag:"Favor",cls:"tag-favor"},
+{decl:"Goodness and mercy are following me today \u2014 behind me, beside me, and before me. I cannot outrun the blessing of God. His goodness pursues me all the days of my life!",verse:"Surely goodness and mercy shall follow me all the days of my life.",ref:"Psalm 23:6",tag:"Favor",cls:"tag-favor"},
+{decl:"I am blessed coming in and I am blessed going out. The blessing of the Lord is on everything I set my hand to today. His blessing is commanded, decreed, and mine in Jesus\u2019 name!",verse:"Blessed shalt thou be when thou comest in, and blessed shalt thou be when thou goest out.",ref:"Deuteronomy 28:6",tag:"Favor",cls:"tag-favor"},
+{decl:"God commands the blessing upon my storehouse and upon everything I put my hand to today. His blessing is not passive \u2014 it is an active command from the throne of heaven!",verse:"The LORD shall command the blessing upon thee in thy storehouses, and in all that thou settest thine hand unto.",ref:"Deuteronomy 28:8",tag:"Favor",cls:"tag-favor"},
+{decl:"I have set the Lord always before me. Because He is at my right hand I shall not be moved. I will not be shaken or uprooted. He is my right hand and I am established!",verse:"I have set the LORD always before me: because he is at my right hand, I shall not be moved.",ref:"Psalm 16:8",tag:"Favor",cls:"tag-favor"},
+{decl:"God opens the heavens over my life and blesses the work of my hands. He opens doors of provision that no recession can close. The windows of heaven are open over me today!",verse:"The LORD shall open unto thee his good treasure, the heaven to give the rain unto thy land in his season, and to bless all the work of thine hand.",ref:"Deuteronomy 28:12",tag:"Favor",cls:"tag-favor"},
+{decl:"The LORD is my Shepherd and I shall not want for anything. He provides pasture, rest, restoration, and guidance. I lack nothing because my Shepherd lacks nothing. Every need is met today!",verse:"The LORD is my shepherd; I shall not want.",ref:"Psalm 23:1",tag:"Provision",cls:"tag-provision"},
+{decl:"My God supplies all of my needs \u2014 not some, not most, but ALL \u2014 according to His riches in glory by Christ Jesus. He is not limited by the economy. He is rich in glory and I am His child!",verse:"My God shall supply all your need according to his riches in glory by Christ Jesus.",ref:"Philippians 4:19",tag:"Provision",cls:"tag-provision"},
+{decl:"I have never seen the righteous forsaken or their children begging bread. That promise belongs to me. God has never abandoned His own and He will not abandon me. My family is provided for!",verse:"I have been young, and now am old; yet have I not seen the righteous forsaken, nor his seed begging bread.",ref:"Psalm 37:25",tag:"Provision",cls:"tag-provision"},
+{decl:"God who did not spare His own Son will freely give me all things I need. If He gave me Jesus, He will give me everything else. All things are mine in Christ Jesus today!",verse:"He that spared not his own Son, but delivered him up for us all, how shall he not with him also freely give us all things?",ref:"Romans 8:32",tag:"Provision",cls:"tag-provision"},
+{decl:"God gives me the power to get wealth to establish His covenant on the earth. My prosperity is purposeful. He has anointed me to produce wealth and I walk in that anointing today!",verse:"But thou shalt remember the LORD thy God: for it is he that giveth thee power to get wealth, that he may establish his covenant.",ref:"Deuteronomy 8:18",tag:"Provision",cls:"tag-provision"},
+{decl:"I seek first the kingdom of God and His righteousness, and all the things I need are added to me. I will not chase provision \u2014 I will chase God, and provision will chase me!",verse:"But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",ref:"Matthew 6:33",tag:"Provision",cls:"tag-provision"},
+{decl:"Jesus bore my sickness and carried my pain to the cross. By His stripes I am healed \u2014 past tense, finished, done. I receive the healing purchased for me at Calvary. My body is the temple of God!",verse:"Surely he hath borne our griefs, and carried our sorrows\u2026 and with his stripes we are healed.",ref:"Isaiah 53:4\u20135",tag:"Healing",cls:"tag-healing"},
+{decl:"God forgives all my sins and heals all my diseases. He redeems my life from destruction and crowns me with lovingkindness. I receive His healing from the crown of my head to the soles of my feet!",verse:"Who forgiveth all thine iniquities; who healeth all thy diseases; who redeemeth thy life from destruction; who crowneth thee with lovingkindness and tender mercies.",ref:"Psalm 103:3\u20134",tag:"Healing",cls:"tag-healing"},
+{decl:"God sent His Word and healed me. He delivered me from every destruction. I receive that Word into my body right now. Every cell, every organ, every system comes into alignment with the healing Word of God!",verse:"He sent his word, and healed them, and delivered them from their destructions.",ref:"Psalm 107:20",tag:"Healing",cls:"tag-healing"},
+{decl:"The Lord Himself is my healer \u2014 Jehovah Rapha. He does not merely send healing from a distance. He IS my healer, personally, directly, completely. I am healed by the living God!",verse:"I am the LORD that healeth thee.",ref:"Exodus 15:26",tag:"Healing",cls:"tag-healing"},
+{decl:"I shall not die but live and declare the works of the Lord! Death has no authority over me. Sickness has no authority over me. I am alive, I am well, and I will declare God\u2019s works all my days!",verse:"I shall not die, but live, and declare the works of the LORD.",ref:"Psalm 118:17",tag:"Healing",cls:"tag-healing"},
+{decl:"The Spirit of God that raised Jesus from the dead lives in me. That same resurrection life and power quickens my mortal body right now. Divine health flows through every part of me today!",verse:"But if the Spirit of him that raised up Jesus from the dead dwell in you, he that raised up Christ from the dead shall also quicken your mortal bodies by his Spirit that dwelleth in you.",ref:"Romans 8:11",tag:"Healing",cls:"tag-healing"},
+{decl:"I can do all things through Christ who gives me strength. There is nothing on my plate today that is too hard. There is no obstacle too great. Christ in me is greater than anything I face!",verse:"I can do all things through Christ which strengtheneth me.",ref:"Philippians 4:13",tag:"Strength",cls:"tag-strength"},
+{decl:"God has not given me a spirit of fear. He has given me power, love, and a sound mind. I reject fear in every form. I walk in power. My mind is clear, focused, and under the Holy Spirit\u2019s control!",verse:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",ref:"2 Timothy 1:7",tag:"Strength",cls:"tag-strength"},
+{decl:"If God is for me, who can be against me? No person, no devil, no circumstance, no report can stand against the God who fights for me. I step into this day with full confidence!",verse:"If God be for us, who can be against us?",ref:"Romans 8:31",tag:"Strength",cls:"tag-strength"},
+{decl:"God holds my right hand today and tells me to fear not \u2014 He will help me. I am not walking into this day alone. The Almighty God Himself is with me every single step!",verse:"For I the LORD thy God will hold thy right hand, saying unto thee, Fear not; I will help thee.",ref:"Isaiah 41:13",tag:"Strength",cls:"tag-strength"},
+{decl:"Those who wait on the Lord renew their strength. I mount up with wings like an eagle. I run and I am not weary. I walk and I do not faint. God renews my strength for everything today requires!",verse:"They that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",ref:"Isaiah 40:31",tag:"Strength",cls:"tag-strength"},
+{decl:"I am strong in the Lord and in the power of His might. I put on the full armor of God today. I stand against every attack fully armored, fully covered, and fully confident in God\u2019s strength!",verse:"Finally, my brethren, be strong in the Lord, and in the power of his might.",ref:"Ephesians 6:10",tag:"Strength",cls:"tag-strength"},
+{decl:"This is the day the Lord has made and I will rejoice and be glad in it! I choose joy today. I choose faith. This day belongs to God and He has made it for my good!",verse:"This is the day which the LORD hath made; we will rejoice and be glad in it.",ref:"Psalm 118:24",tag:"Strength",cls:"tag-strength"},
+{decl:"His mercies over my life are brand new this morning. His compassions never fail. Great is His faithfulness \u2014 in my finances, my family, my health, in every area of my life. New mercies. Every morning!",verse:"The LORD\u2019s mercies are new every morning: great is thy faithfulness.",ref:"Lamentations 3:23",tag:"Strength",cls:"tag-strength"},
+{decl:"God keeps me in perfect peace because my mind is fixed on Him. I will not be anxious or overwhelmed. The peace of God that surpasses all understanding guards my heart and mind right now!",verse:"Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",ref:"Isaiah 26:3",tag:"Peace",cls:"tag-peace"},
+{decl:"The Lord my God is in the midst of me and He is mighty to save! He rejoices over me with joy. He rests in His love. He celebrates me with singing. I am loved, I am kept, I am His!",verse:"The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",ref:"Zephaniah 3:17",tag:"Peace",cls:"tag-peace"},
+{decl:"I am God\u2019s workmanship, created in Christ Jesus for good works He prepared before the foundation of the world. My purpose is not accidental \u2014 it was designed before I was born. I step into it today!",verse:"For we are his workmanship, created in Christ Jesus unto good works, which God hath before ordained that we should walk in them.",ref:"Ephesians 2:10",tag:"Identity",cls:"tag-identity"},
+{decl:"I am the head and not the tail. I am above and not beneath. The Lord has made me to be the leader, the solution, and the blessing in every room I enter today!",verse:"The LORD shall make thee the head, and not the tail; and thou shalt be above only, and thou shalt not be beneath.",ref:"Deuteronomy 28:13",tag:"Identity",cls:"tag-identity"},
+{decl:"I am a new creation in Christ Jesus. Old things are passed away and all things are new. I do not walk in the identity of my past. I walk in the identity God has given me \u2014 righteous, redeemed, and new!",verse:"Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.",ref:"2 Corinthians 5:17",tag:"Identity",cls:"tag-identity"},
+{decl:"All things work together for my good because I love God and I am called according to His purpose. Nothing is wasted. Nothing is an accident. All things \u2014 even the hard things \u2014 work for my good!",verse:"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",ref:"Romans 8:28",tag:"Identity",cls:"tag-identity"},
+{decl:"I have been crucified with Christ and it is no longer I who live but Christ who lives in me. The life I live I live by faith in the Son of God who loved me and gave Himself for me!",verse:"I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.",ref:"Galatians 2:20",tag:"Identity",cls:"tag-identity"},
+{decl:"God has plans for me \u2014 plans for peace and not for evil, to give me a future and a hope. My future is not in question. My hope is not deferred. God has a good plan and I walk toward it today!",verse:"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",ref:"Jeremiah 29:11",tag:"Identity",cls:"tag-identity"},
+{decl:"I am the righteousness of God in Christ Jesus. I have been made right with God by the blood of Jesus. I stand before God today accepted, forgiven, and righteous in Christ!",verse:"For he hath made him to be sin for us, who knew no sin; that we might be made the righteousness of God in him.",ref:"2 Corinthians 5:21",tag:"Identity",cls:"tag-identity"},
+{decl:"The steps of a good man are ordered by the Lord and He delights in every step I take. My path today is ordered by God. I will not miss my divine appointments or the open doors He has set before me!",verse:"The steps of a good man are ordered by the LORD: and he delighteth in his way.",ref:"Psalm 37:23",tag:"Wisdom",cls:"tag-wisdom"},
+{decl:"In all my ways I acknowledge Him and He directs my paths. I submit every decision today to the Lord. He is directing my path and I trust where He leads!",verse:"In all thy ways acknowledge him, and he shall direct thy paths.",ref:"Proverbs 3:6",tag:"Wisdom",cls:"tag-wisdom"},
+{decl:"God gives wisdom to those who ask, liberally and without reproach. Today I ask for wisdom and I receive it. My mind is illuminated by the Spirit of God. Every decision I make today is wise!",verse:"If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",ref:"James 1:5",tag:"Wisdom",cls:"tag-wisdom"}
+],
+
+// ═══════════════════════════════════════════════════════════ PRAYERS (36) ════
+prayers:[
+{decl:"Father, I come boldly to Your throne with my request. You promised that everyone who asks receives, everyone who seeks finds, and to everyone who knocks the door is opened. I am asking, seeking, and knocking \u2014 in Jesus\u2019 name!",verse:"Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you. For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.",ref:"Matthew 7:7\u20138",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I bring this request to You in the name of Jesus. You said if I ask anything in His name, You will do it. Not in my own name but in the mighty name of Jesus \u2014 hear me and answer!",verse:"If ye shall ask any thing in my name, I will do it.",ref:"John 14:14",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, I am calling on You right now and I know You will answer me. You promised to show me great and mighty things I do not yet know. Open my eyes, speak to me Lord \u2014 I am listening!",verse:"Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",ref:"Jeremiah 33:3",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I thank You that before I even finished praying, You already heard me. Before I called, You prepared the answer. Your timing is perfect and Your answer is already on its way!",verse:"Before they call, I will answer; and while they are yet speaking, I will hear.",ref:"Isaiah 65:24",tag:"Promise",cls:"tag-promise"},
+{decl:"I come to You with confidence, Father, knowing that You hear every prayer according to Your will. And because You hear me, I know I have whatever I have asked of You. I receive it now by faith!",verse:"And this is the confidence that we have in him, that, if we ask any thing according to his will, he heareth us: and if we know that he hear us, whatsoever we ask, we know that we have the petitions that we desired of him.",ref:"1 John 5:14\u201315",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, Your Word says that whatever I ask in prayer, believing, I shall receive. I am praying and I am believing \u2014 in the power of Your Word and the name of Jesus. I receive the answer now!",verse:"And all things, whatsoever ye shall ask in prayer, believing, ye shall receive.",ref:"Matthew 21:22",tag:"Promise",cls:"tag-promise"},
+{decl:"I come boldly to the throne of grace right now \u2014 not timidly, not with doubt, but boldly as Your child. I receive mercy and grace to help in exactly what I need right now!",verse:"Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.",ref:"Hebrews 4:16",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, I cast every care, every worry, and every burden at Your feet right now. You care for me \u2014 deeply, personally, completely. I refuse to carry what You have told me to lay down. I trust You with it!",verse:"Casting all your care upon him; for he careth for you.",ref:"1 Peter 5:7",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I refuse to be anxious about anything. Instead I bring everything before You right now with thanksgiving. And as I do, I receive the peace that passes all understanding!",verse:"Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",ref:"Philippians 4:6\u20137",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I thank You that the Holy Spirit is interceding for me right now with groanings that cannot be uttered. Even when I don\u2019t know how to pray, the Spirit prays through me according to Your perfect will!",verse:"The Spirit itself maketh intercession for us with groanings which cannot be uttered\u2026 he maketh intercession for the saints according to the will of God.",ref:"Romans 8:26\u201327",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, I cry out to You as the God who performs all things for me. You are working on my behalf even now. Nothing is too hard for You. You are the God who acts \u2014 and You are acting for me!",verse:"I will cry unto God most high; unto God that performeth all things for me.",ref:"Psalm 57:2",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I delight myself in You. As I do, You give me the desires of my heart. I commit my way to You and I trust You. You will bring it to pass \u2014 Your way, Your timing, Your glory!",verse:"Delight thyself also in the LORD; and he shall give thee the desires of thine heart. Commit thy way unto the LORD; trust also in him; and he shall bring it to pass.",ref:"Psalm 37:4\u20135",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, You abide in me and Your Word abides in me. From that place of abiding I ask, and I know it shall be done. I am not praying from outside Your presence \u2014 I am praying from inside it!",verse:"If ye abide in me, and my words abide in you, ye shall ask what ye will, and it shall be done unto you.",ref:"John 15:7",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, the effectual fervent prayer of a righteous man avails much. I am the righteousness of God in Christ and my prayers are powerful and effective. They move mountains and shift atmospheres!",verse:"The effectual fervent prayer of a righteous man availeth much.",ref:"James 5:16",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, You are near to all who call upon You in truth. I am calling on You in truth right now. You fulfill the desire of those who fear You. You hear my cry and You will save me!",verse:"The LORD is nigh unto all them that call upon him, to all that call upon him in truth. He will fulfil the desire of them that fear him: he also will hear their cry, and will save them.",ref:"Psalm 145:18\u201319",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I sought You and You heard me and delivered me from all my fears. Not some \u2014 all. I bring every fear to You right now and I receive complete deliverance. You have heard me!",verse:"I sought the LORD, and he heard me, and delivered me from all my fears.",ref:"Psalm 34:4",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, You call upon me and You answer me. You are with me in trouble and You deliver me and honor me. I call upon You right now. You answer me. You deliver me. You honor me!",verse:"He shall call upon me, and I will answer him: I will be with him in trouble; I will deliver him, and honour him.",ref:"Psalm 91:15",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I thank You that You hear prayer. My voice does not fall to the ground. My prayer reaches Your ears and You respond to me today. O God who hears prayer \u2014 I pray!",verse:"O thou that hearest prayer, unto thee shall all flesh come.",ref:"Psalm 65:2",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, You are able to do exceedingly abundantly above all that I could ask or think, according to the power that works in me. My prayers are not the ceiling \u2014 they are the floor. You exceed what I can imagine!",verse:"Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us.",ref:"Ephesians 3:20",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, Your arm is not too short to save me and Your ear is not too heavy to hear me. You are fully capable and fully willing to act on my behalf. There is no limit to what You can do!",verse:"Behold, the LORD\u2019s hand is not shortened, that it cannot save; neither his ear heavy, that it cannot hear.",ref:"Isaiah 59:1",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I ask and I believe I receive it when I pray. I will not doubt in my heart. I believe what I say will come to pass. I have faith in God. The mountain before me will move!",verse:"Therefore I say unto you, What things soever ye desire, when ye pray, believe that ye receive them, and ye shall have them.",ref:"Mark 11:24",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I magnify You today because You are the God of the impossible, the miraculous, the God who parts seas and raises the dead. Nothing I bring before You today is too hard for You!",verse:"Is any thing too hard for the LORD?",ref:"Genesis 18:14",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, You have said to call upon You in the day of trouble and You will deliver me and I will glorify You. Today I call upon You. I believe You will deliver me. And when You do, I give You all the glory!",verse:"And call upon me in the day of trouble: I will deliver thee, and thou shalt glorify me.",ref:"Psalm 50:15",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I thank You for Your faithfulness. You who called me are faithful and You will do it. What You have promised You will fulfill. What You have started You will finish. I rest in Your faithfulness!",verse:"Faithful is he that calleth you, who also will do it.",ref:"1 Thessalonians 5:24",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, with men this is impossible \u2014 but with God all things are possible. What looks impossible to the natural eye is completely possible for You. I bring You the impossible today and declare it is possible with God!",verse:"With men this is impossible; but with God all things are possible.",ref:"Matthew 19:26",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, You have ordained me to bear fruit that remains. Whatever I ask of the Father in Your name, He gives it to me. I pray from a position of divine purpose and appointment. Hear me, Father!",verse:"Ye have not chosen me, but I have chosen you, and ordained you, that ye should go and bring forth fruit, and that your fruit should remain: that whatsoever ye shall ask of the Father in my name, he may give it you.",ref:"John 15:16",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, in the morning I lay my requests before You and I wait in expectation. I do not pray and then worry. I pray and then I watch \u2014 because You hear me and Your answer is on its way!",verse:"In the morning, LORD, you hear my voice; in the morning I lay my requests before you and wait expectantly.",ref:"Psalm 5:3",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, the prayer of faith saves the sick and You raise them up. I pray in faith right now \u2014 not in doubt, not in wavering, but in the full assurance of faith. Your Word will not return void!",verse:"And the prayer of faith shall save the sick, and the Lord shall raise him up.",ref:"James 5:15",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, You are El Roi \u2014 the God who sees me. You see my situation right now. Nothing is hidden from You. You see every detail and You are already at work bringing the answer. I trust what You see!",verse:"Thou God seest me.",ref:"Genesis 16:13",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, the righteous cry and You hear them and deliver them out of all their troubles. I am the righteousness of God in Christ. I am crying out to You and You deliver me out of all my troubles!",verse:"The righteous cry, and the LORD heareth, and delivereth them out of all their troubles.",ref:"Psalm 34:17",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, You have said You will never leave me nor forsake me. No matter what I face, I face it with You. You have not left and You will not leave. I am never alone in this. Never!",verse:"I will never leave thee, nor forsake thee.",ref:"Hebrews 13:5",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I wait upon You in hope today. You are my help and my shield. My heart rejoices in You because I trust in Your holy name. Let Your mercy be upon me as I put my hope in You!",verse:"Our soul waiteth for the LORD: he is our help and our shield. For our heart shall rejoice in him, because we have trusted in his holy name.",ref:"Psalm 33:20\u201321",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, I have been faithful to bring my tithes and offerings before You. Your Word says You will open the windows of heaven and rebuke the devourer for my sake. I stand on that promise. Heaven is open over my life!",verse:"Bring ye all the tithes into the storehouse\u2026 if I will not open you the windows of heaven, and pour you out a blessing, that there shall not be room enough to receive it.",ref:"Malachi 3:10",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, I come to You with a heart of thanksgiving. I thank You for the answer before I see it. Faith is the substance of things hoped for and the evidence of things not seen. I have it right now!",verse:"Now faith is the substance of things hoped for, the evidence of things not seen.",ref:"Hebrews 11:1",tag:"Promise",cls:"tag-promise"},
+{decl:"Lord, I wait on You and I am of good courage. You strengthen my heart as I wait on You. I will not grow weary in waiting. My strength is renewed as I wait on the Lord!",verse:"Wait on the LORD: be of good courage, and he shall strengthen thine heart: wait, I say, on the LORD.",ref:"Psalm 27:14",tag:"Promise",cls:"tag-promise"},
+{decl:"Father, You delight in the prosperity of Your servant. Not just spiritual prosperity but wholeness in every area. You delight in my flourishing. I receive that delight and I walk in Your blessing!",verse:"Let them shout for joy, and be glad, that favour my righteous cause: yea, let them say continually, Let the LORD be magnified, which hath pleasure in the prosperity of his servant.",ref:"Psalm 35:27",tag:"Promise",cls:"tag-promise"}
+],
+
+// ══════════════════════════════════════════════════════════ PRAISES (36) ════
+praises:[
+{decl:"The Lord is my Shepherd! He is personally tending to my life. He leads me to rest, He leads me to peace, He restores my soul. I want for nothing because He lacks nothing. My Shepherd is the God of all creation!",verse:"The LORD is my shepherd; I shall not want. He maketh me to lie down in green pastures: he leadeth me beside the still waters. He restoreth my soul.",ref:"Psalm 23:1\u20133",tag:"Praise",cls:"tag-praise"},
+{decl:"I give thanks to the Lord for He is good \u2014 not sometimes, not when I deserve it, but always. His mercy endures forever. It does not run out. It does not expire. His goodness and mercy are over my life forever!",verse:"O give thanks unto the LORD; for he is good: for his mercy endureth for ever.",ref:"Psalm 136:1",tag:"Praise",cls:"tag-praise"},
+{decl:"I bless the Lord at all times \u2014 in the good season and in the hard season. His praise is always in my mouth. I boast in the Lord, not in my own strength. God is my boast and He is worthy!",verse:"I will bless the LORD at all times: his praise shall continually be in my mouth. My soul shall make her boast in the LORD.",ref:"Psalm 34:1\u20132",tag:"Praise",cls:"tag-praise"},
+{decl:"God is great and greatly to be praised! His greatness has no bottom and no ceiling \u2014 it is unsearchable. I worship a God whose power and majesty cannot be contained. I praise the Most High God!",verse:"Great is the LORD, and greatly to be praised; and his greatness is unsearchable.",ref:"Psalm 145:3",tag:"Praise",cls:"tag-praise"},
+{decl:"I bless the Lord with everything in me. He forgives all my sin, He heals all my diseases, He redeems my life, He crowns me with lovingkindness! I will not forget a single one of His benefits!",verse:"Bless the LORD, O my soul, and forget not all his benefits: who forgiveth all thine iniquities; who healeth all thy diseases; who redeemeth thy life from destruction; who crowneth thee with lovingkindness and tender mercies.",ref:"Psalm 103:2\u20134",tag:"Praise",cls:"tag-praise"},
+{decl:"I praise You, Lord, with my whole heart \u2014 not part of it, all of it. I am glad and I rejoice in You. I sing praise to Your name, O Most High God. You are worthy of everything I have!",verse:"I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works. I will be glad and rejoice in thee.",ref:"Psalm 9:1\u20132",tag:"Praise",cls:"tag-praise"},
+{decl:"Your lovingkindness is better than life itself. My lips praise You! I lift my hands to You right now. You are better than health, better than wealth, better than anything this world offers!",verse:"Because thy lovingkindness is better than life, my lips shall praise thee. Thus will I bless thee while I live: I will lift up my hands in thy name.",ref:"Psalm 63:3\u20134",tag:"Praise",cls:"tag-praise"},
+{decl:"The Lord is my strength and my song! He has become my salvation. I exalt Him \u2014 not because life is always easy but because He is always God. He is worthy of praise in every season!",verse:"The LORD is my strength and my song, and is become my salvation: he is my God, and I will prepare him an habitation; my father\u2019s God, and I will exalt him.",ref:"Exodus 15:2",tag:"Praise",cls:"tag-praise"},
+{decl:"Every single day I bless You, Lord. Forever and ever Your name is worthy. I will not stop praising You \u2014 not today, not ever. You are my King, my God, and my everything!",verse:"I will extol thee, my God, O king; and I will bless thy name for ever and ever. Every day will I bless thee; and I will praise thy name for ever and ever.",ref:"Psalm 145:1\u20132",tag:"Praise",cls:"tag-praise"},
+{decl:"Lord, You are my God. I exalt You and I praise Your name for You have done wonderful things! Your counsel is faithfulness and Your ways are truth. Everything You have promised will come to pass!",verse:"O LORD, thou art my God; I will exalt thee, I will praise thy name; for thou hast done wonderful things; thy counsels of old are faithfulness and truth.",ref:"Isaiah 25:1",tag:"Praise",cls:"tag-praise"},
+{decl:"The Lord has done great things for me and I am glad! I will not minimize what He has done. I will not forget what He has brought me through. He has been faithful and I declare it openly!",verse:"The LORD hath done great things for us; whereof we are glad.",ref:"Psalm 126:3",tag:"Praise",cls:"tag-praise"},
+{decl:"Let everything that has breath praise the Lord \u2014 and I have breath! As long as breath is in my body I will use it to praise Him. Every breath is a gift and every breath goes back to Him!",verse:"Let every thing that hath breath praise the LORD. Praise ye the LORD.",ref:"Psalm 150:6",tag:"Praise",cls:"tag-praise"},
+{decl:"God satisfies the longing soul and fills the hungry soul with goodness. I come to Him hungry and He fills me. I come to Him longing and He satisfies. He meets me at the point of my deepest need!",verse:"Oh that men would praise the LORD for his goodness, and for his wonderful works to the children of men! For he satisfieth the longing soul, and filleth the hungry soul with goodness.",ref:"Psalm 107:8\u20139",tag:"Praise",cls:"tag-praise"},
+{decl:"Who is a God like our God? No one. He pardons sin, He passes over transgression, He delights in mercy. He is not a God of wrath toward His children \u2014 He delights in mercy. I praise the God of compassion!",verse:"Who is a God like unto thee, that pardoneth iniquity, and passeth by the transgression of the remnant of his heritage? he retaineth not his anger for ever, because he delighteth in mercy.",ref:"Micah 7:18",tag:"Praise",cls:"tag-praise"},
+{decl:"God\u2019s mercy is in the heavens and His faithfulness reaches to the clouds. His righteousness is like a mountain \u2014 immovable, eternal, unshakable. He preserves me. His love never wavers!",verse:"Thy mercy, O LORD, is in the heavens; and thy faithfulness reacheth unto the clouds. Thy righteousness is like the great mountains\u2026 O LORD, thou preservest man and beast.",ref:"Psalm 36:5\u20136",tag:"Praise",cls:"tag-praise"},
+{decl:"Make a joyful noise to the Lord \u2014 and I make it now! I serve the Lord with gladness. He is God, He made me, I am His, and I belong to Him. I worship the God who made me!",verse:"Make a joyful noise unto the LORD, all ye lands. Serve the LORD with gladness: come before his presence with singing. Know ye that the LORD he is God.",ref:"Psalm 100:1\u20133",tag:"Praise",cls:"tag-praise"},
+{decl:"I enter His gates with thanksgiving and His courts with praise. Gratitude is my key into His presence and I come in now with a heart overflowing with thanksgiving. The Lord is good and His mercy is everlasting!",verse:"Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name. For the LORD is good; his mercy is everlasting.",ref:"Psalm 100:4\u20135",tag:"Praise",cls:"tag-praise"},
+{decl:"The heavens declare the glory of God and the firmament shows His handiwork. Everything I see speaks of His majesty. I look at creation and I am in awe of the God I serve. He is magnificent!",verse:"The heavens declare the glory of God; and the firmament sheweth his handywork.",ref:"Psalm 19:1",tag:"Praise",cls:"tag-praise"},
+{decl:"I will sing to the Lord a new song because He has done marvelous things. His right hand and His holy arm have won the victory. He is victorious and I belong to the victorious God!",verse:"O sing unto the LORD a new song; for he hath done marvellous things: his right hand, and his holy arm, hath gotten him the victory.",ref:"Psalm 98:1",tag:"Praise",cls:"tag-praise"},
+{decl:"The Lord reigns! He is clothed in majesty and armed with strength. His throne is established of old and He is from everlasting. I worship the eternal, reigning, unchanging God!",verse:"The LORD reigneth, he is clothed with majesty; the LORD is clothed with strength, wherewith he hath girded himself: the world also is stablished, that it cannot be moved.",ref:"Psalm 93:1",tag:"Praise",cls:"tag-praise"},
+{decl:"God inhabits the praises of His people and I invite Him into this moment with my praise. I praise my way into His presence. I praise through the problem. Praise positions me for breakthrough!",verse:"But thou art holy, O thou that inhabitest the praises of Israel.",ref:"Psalm 22:3",tag:"Praise",cls:"tag-praise"},
+{decl:"Through Jesus I offer the sacrifice of praise continually \u2014 the fruit of my lips giving thanks to His name. My praise is not based on circumstances. It is a sacrifice and a choice. I choose to praise!",verse:"By him therefore let us offer the sacrifice of praise to God continually, that is, the fruit of our lips giving thanks to his name.",ref:"Hebrews 13:15",tag:"Praise",cls:"tag-praise"},
+{decl:"I will rejoice in the Lord always \u2014 and again I say, I rejoice! Not just when things are good but always. I rejoice in who He is, what He has done, and what He has promised. His joy is my strength!",verse:"Rejoice in the Lord alway: and again I say, Rejoice.",ref:"Philippians 4:4",tag:"Praise",cls:"tag-praise"},
+{decl:"God is clothed with honour and majesty. He covers Himself with light as with a garment. He stretched out the heavens like a curtain. He rides upon the wings of the wind. I worship the majestic, all-powerful God!",verse:"Thou art clothed with honour and majesty: who coverest thyself with light as with a garment: who stretchest out the heavens like a curtain.",ref:"Psalm 104:1\u20132",tag:"Praise",cls:"tag-praise"},
+{decl:"I exalt God\u2019s name today. He delivered me from all my fears. Those who look to Him are radiant and their faces are never covered with shame. I look to Him and I am radiant today!",verse:"O magnify the LORD with me, and let us exalt his name together. I sought the LORD, and he heard me, and delivered me from all my fears. They looked unto him, and were lightened.",ref:"Psalm 34:3\u20135",tag:"Praise",cls:"tag-praise"},
+{decl:"The Lord does not change. He is the same God who parted the Red Sea, raised the dead, healed the sick, and fed thousands. He is the same today. What He did then He can do now and I praise Him!",verse:"For I am the LORD, I change not.",ref:"Malachi 3:6",tag:"Praise",cls:"tag-praise"},
+{decl:"I praise You, Father, because You are worthy. Not because of what You can do for me but because of who You are. Holy, holy, holy is the Lord God Almighty. You are worthy of all glory and honor!",verse:"Holy, holy, holy, is the LORD of hosts: the whole earth is full of his glory.",ref:"Isaiah 6:3",tag:"Praise",cls:"tag-praise"},
+{decl:"Nothing can separate me from the love of God which is in Christ Jesus. Not death, not life, not things present, not things to come. I am held by a love that nothing in creation can break. I praise Him for His love!",verse:"For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come\u2026 shall be able to separate us from the love of God, which is in Christ Jesus our Lord.",ref:"Romans 8:38\u201339",tag:"Praise",cls:"tag-praise"},
+{decl:"I taste and see that the Lord is good. Blessed am I because I take refuge in Him. I have tasted His goodness in my own life and I declare it today: God is good and His goodness is real and personal!",verse:"O taste and see that the LORD is good: blessed is the man that trusteth in him.",ref:"Psalm 34:8",tag:"Praise",cls:"tag-praise"},
+{decl:"Many are the afflictions of the righteous but the Lord delivers them out of every single one. Not some of them \u2014 all of them. I praise the God who delivers out of them ALL!",verse:"Many are the afflictions of the righteous: but the LORD delivereth him out of them all.",ref:"Psalm 34:19",tag:"Praise",cls:"tag-praise"},
+{decl:"Lord, You are from everlasting to everlasting. Before the mountains were formed \u2014 You are God. You are eternal and I am held by the Eternal One. I worship the God who has no beginning and no end!",verse:"Before the mountains were brought forth, or ever thou hadst formed the earth and the world, even from everlasting to everlasting, thou art God.",ref:"Psalm 90:2",tag:"Praise",cls:"tag-praise"},
+{decl:"As the deer pants after the water brooks, so my soul pants after You, O God! My soul thirsts for the living God. He is not a dead religion or a distant concept. He is the living God and I hunger for Him!",verse:"As the hart panteth after the water brooks, so panteth my soul after thee, O God. My soul thirsteth for God, for the living God.",ref:"Psalm 42:1\u20132",tag:"Praise",cls:"tag-praise"},
+{decl:"How lovely is God\u2019s dwelling place! My soul longs for the courts of the Lord. He is my Sun and my Shield. He gives grace and glory. No good thing does He withhold. I love being in His presence!",verse:"How amiable are thy tabernacles, O LORD of hosts! My soul longeth, yea, even fainteth for the courts of the LORD: my heart and my flesh crieth out for the living God.",ref:"Psalm 84:1\u20132",tag:"Praise",cls:"tag-praise"},
+{decl:"Bless the Lord, all His works, in all places of His dominion! Every created thing declares His glory and I join that declaration right now. The Lord is blessed and His dominion is over all things!",verse:"Bless the LORD, all his works in all places of his dominion: bless the LORD, O my soul.",ref:"Psalm 103:22",tag:"Praise",cls:"tag-praise"},
+{decl:"God\u2019s love has been poured out into my heart through the Holy Spirit. He loves me with an everlasting love. I am drawn to Him with lovingkindness. I praise the God who loves me with an everlasting love!",verse:"The LORD hath appeared of old unto me, saying, Yea, I have loved thee with an everlasting love: therefore with lovingkindness have I drawn thee.",ref:"Jeremiah 31:3",tag:"Praise",cls:"tag-praise"},
+{decl:"I will exalt God because He has heard my cry. He is my strength and my shield. My heart trusted in Him and I was helped. My heart leaps for joy and I praise Him with my song today!",verse:"The LORD is my strength and my shield; my heart trusted in him, and I am helped: therefore my heart greatly rejoiceth; and with my song will I praise him.",ref:"Psalm 28:7",tag:"Praise",cls:"tag-praise"}
+],
+
+// ═══════════════════════════════════════════════════════════ EVENING (40) ════
+evening:[
+{decl:"I lay down in peace and I will sleep safely tonight. The Lord alone makes me dwell in safety. I do not need to strive or worry through the night \u2014 He is my safety and my rest. I sleep in perfect peace!",verse:"I will both lay me down in peace, and sleep: for thou, LORD, only makest me dwell in safety.",ref:"Psalm 4:8",tag:"Rest",cls:"tag-rest"},
+{decl:"My God never sleeps and never slumbers. While I rest, He is watching. The same God who keeps Israel keeps me. He is at my right hand through every hour of this night. I am safe \u2014 He is on watch!",verse:"He that keepeth thee will not slumber. Behold, he that keepeth Israel shall neither slumber nor sleep. The LORD is thy keeper: the LORD is thy shade upon thy right hand.",ref:"Psalm 121:3\u20135",tag:"Rest",cls:"tag-rest"},
+{decl:"God gives sleep to His beloved \u2014 and I am His beloved. Sleep is not a struggle for me; it is a gift from God. I receive His gift of deep, peaceful, restorative sleep tonight. My body and my mind rest in Him!",verse:"He giveth his beloved sleep.",ref:"Psalm 127:2",tag:"Rest",cls:"tag-rest"},
+{decl:"As I lie down tonight I will not be afraid. My sleep will be sweet because God watches over it. No nightmare, no anxiety, no fear has authority over my rest tonight. My sleep is sweet and my rest is sure!",verse:"When thou liest down, thou shalt not be afraid: yea, thou shalt lie down, and thy sleep shall be sweet.",ref:"Proverbs 3:24",tag:"Rest",cls:"tag-rest"},
+{decl:"No evil will befall me tonight and no plague will come near my home. Angels have been given charge over me and they are keeping watch right now. My house is covered. My family is protected!",verse:"There shall no evil befall thee, neither shall any plague come nigh thy dwelling. For he shall give his angels charge over thee, to keep thee in all thy ways.",ref:"Psalm 91:10\u201311",tag:"Rest",cls:"tag-rest"},
+{decl:"Even through dark valleys I will fear no evil \u2014 for You are with me. Your rod and Your staff comfort me. I do not face the night alone. God is with me in every shadow and through every dark hour!",verse:"Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",ref:"Psalm 23:4",tag:"Rest",cls:"tag-rest"},
+{decl:"The sun will not harm me by day nor the moon by night. The Lord preserves my soul. He preserves me from all evil. He keeps me tonight and in every night that follows!",verse:"The sun shall not smite thee by day, nor the moon by night. The LORD shall preserve thee from all evil: he shall preserve thy soul.",ref:"Psalm 121:6\u20137",tag:"Rest",cls:"tag-rest"},
+{decl:"I dwell in the secret place of the Most High tonight and I abide under the shadow of the Almighty. This is my resting place. No harm reaches me here \u2014 I am hidden in God!",verse:"He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty.",ref:"Psalm 91:1",tag:"Rest",cls:"tag-rest"},
+{decl:"God covers me with His feathers tonight and under His wings I trust. His faithfulness is my shield all through the night. I rest beneath the covering of the living God!",verse:"He shall cover thee with his feathers, and under his wings shalt thou trust: his truth shall be thy shield and buckler.",ref:"Psalm 91:4",tag:"Rest",cls:"tag-rest"},
+{decl:"Into Your hands, Father, I commit my spirit tonight. I release this day \u2014 every success, every failure, every worry, every joy. It is all in Your hands. You have redeemed me and I rest in that redemption!",verse:"Into thine hand I commit my spirit: thou hast redeemed me, O LORD God of truth.",ref:"Psalm 31:5",tag:"Trust",cls:"tag-trust"},
+{decl:"Lord, I come to You right now with every burden from today. You have promised me rest and I receive it. I am done striving for today. I take Your yoke \u2014 it is easy. I take Your burden \u2014 it is light. I rest in You!",verse:"Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls.",ref:"Matthew 11:28\u201329",tag:"Rest",cls:"tag-rest"},
+{decl:"I cast every burden from today upon the Lord right now. Every weight, every worry, every unresolved problem \u2014 I give it to Him. He sustains me. He will not let me be shaken. I am free to rest!",verse:"Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved.",ref:"Psalm 55:22",tag:"Trust",cls:"tag-trust"},
+{decl:"I cast all my cares on the Lord tonight because He genuinely cares for me. He is personally invested in my life. I am not alone in what I carried today. I let it all go right now!",verse:"Casting all your care upon him; for he careth for you.",ref:"1 Peter 5:7",tag:"Trust",cls:"tag-trust"},
+{decl:"I am still before God right now. I quiet my mind and my body. He is God and He is in control of everything I could not control today. I be still. He is exalted and His hand is over my life!",verse:"Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.",ref:"Psalm 46:10",tag:"Rest",cls:"tag-rest"},
+{decl:"Lord, You have said that You will never leave me nor forsake me. As I go to sleep tonight I am not alone. You are here with me in this room, through every hour of the night. I am not alone!",verse:"I will never leave thee, nor forsake thee.",ref:"Hebrews 13:5",tag:"Trust",cls:"tag-trust"},
+{decl:"Father, I release tomorrow into Your hands tonight. You hold my future just as You hold this moment. My tomorrow is safe with You. I do not need to lie awake planning what You are already preparing!",verse:"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",ref:"Jeremiah 29:11",tag:"Trust",cls:"tag-trust"},
+{decl:"God works all things together for good for those who love Him. Everything that happened today \u2014 He is working it together for my good. Nothing is wasted. Nothing is an accident. I rest in that truth!",verse:"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",ref:"Romans 8:28",tag:"Trust",cls:"tag-trust"},
+{decl:"I commit my works to the Lord tonight. I release what I accomplished and what I did not. He will establish my thoughts and order my steps again tomorrow. Tonight I rest and let Him be God!",verse:"Commit thy works unto the LORD, and thy thoughts shall be established.",ref:"Proverbs 16:3",tag:"Trust",cls:"tag-trust"},
+{decl:"The peace of Jesus is over me tonight \u2014 a peace that surpasses logic, surpasses circumstance, surpasses everything I faced today. My heart is not troubled. I am not afraid. I have His peace!",verse:"Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",ref:"John 14:27",tag:"Peace",cls:"tag-peace"},
+{decl:"God keeps me in perfect peace tonight because my mind is fixed on Him. I choose to fix my thoughts on Him and not on the problems of the day. He is bigger than every problem. His peace is my portion!",verse:"Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",ref:"Isaiah 26:3",tag:"Peace",cls:"tag-peace"},
+{decl:"The peace of God that passes all understanding is guarding my heart and my mind tonight. No anxious thought gets through that guard. No worry, no fear \u2014 my heart and mind are kept by God!",verse:"And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",ref:"Philippians 4:7",tag:"Peace",cls:"tag-peace"},
+{decl:"The Lord blesses me and keeps me tonight. His face shines upon me and He is gracious to me. He lifts His countenance upon me and gives me peace. I go to sleep under the spoken blessing of the Lord!",verse:"The LORD bless thee, and keep thee: The LORD make his face shine upon thee, and be gracious unto thee: The LORD lift up his countenance upon thee, and give thee peace.",ref:"Numbers 6:24\u201326",tag:"Peace",cls:"tag-peace"},
+{decl:"God has not given me a spirit of fear. He has given me power, love, and a sound mind. I reject every fearful thought tonight. My mind is sound. My heart is at peace. I sleep in the power and love of God!",verse:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",ref:"2 Timothy 1:7",tag:"Peace",cls:"tag-peace"},
+{decl:"God is my refuge and strength tonight \u2014 a very present help in trouble. I will not fear even if the whole world seems uncertain. God is here. He is present. He is with me in this room. I rest in that reality!",verse:"God is our refuge and strength, a very present help in trouble. Therefore will not we fear.",ref:"Psalm 46:1\u20132",tag:"Peace",cls:"tag-peace"},
+{decl:"His compassions have not failed me today and they will be fresh when I wake tomorrow. Every morning I get new mercy. Great is His faithfulness to me \u2014 it did not waver today and it will not waver tomorrow!",verse:"It is of the LORD\u2019s mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.",ref:"Lamentations 3:22\u201323",tag:"Trust",cls:"tag-trust"},
+{decl:"The eternal God is my refuge tonight. Underneath me are the everlasting arms \u2014 I cannot fall through them. He holds me while I sleep. He held me through the day. He will hold me into tomorrow!",verse:"The eternal God is thy refuge, and underneath are the everlasting arms.",ref:"Deuteronomy 33:27",tag:"Trust",cls:"tag-trust"},
+{decl:"The Lord restores my soul. While I sleep tonight He is restoring and preparing me. I will wake refreshed, renewed, and ready. He restores what the day has taken and prepares me for tomorrow!",verse:"He restoreth my soul: he leadeth me in the paths of righteousness for his name\u2019s sake.",ref:"Psalm 23:3",tag:"Trust",cls:"tag-trust"},
+{decl:"The Lord my God is mighty in the midst of my life. He saves me, He rejoices over me with joy, He rests in His love for me, and He sings over me tonight. As I sleep, my Father is singing over me!",verse:"The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",ref:"Zephaniah 3:17",tag:"Trust",cls:"tag-trust"},
+{decl:"I am in the hand of the Lord tonight. No one can pluck me out of His hand. His grip on me is stronger than anything that tried to grip me today. I am held by God and His hold never slips!",verse:"And I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of my hand.",ref:"John 10:28",tag:"Trust",cls:"tag-trust"},
+{decl:"The Lord watches over my life tonight and in every night to come. He watches over my lying down and my rising up. He is acquainted with all my ways. I am fully known and fully kept by God!",verse:"Thou knowest my downsitting and mine uprising, thou understandest my thought afar off\u2026 thou art acquainted with all my ways.",ref:"Psalm 139:2\u20133",tag:"Trust",cls:"tag-trust"},
+{decl:"The Lord is faithful and He will establish me and guard me from all evil. He has promised it and He does not break His promises. I rest on the faithfulness of a God who has never failed anyone who trusted Him!",verse:"But the Lord is faithful, who shall stablish you, and keep you from evil.",ref:"2 Thessalonians 3:3",tag:"Trust",cls:"tag-trust"},
+{decl:"Goodness and mercy follow me all the days of my life \u2014 and they follow me into the night. They are here with me now. Tomorrow morning they will still be following me. I cannot escape the goodness of God!",verse:"Surely goodness and mercy shall follow me all the days of my life.",ref:"Psalm 23:6",tag:"Trust",cls:"tag-trust"},
+{decl:"My times are in His hands. This night is in His hands. Tomorrow is in His hands. My whole life is held by the One whose hands spoke the universe into existence. I am safe, I am kept, I am His!",verse:"My times are in thy hand.",ref:"Psalm 31:15",tag:"Trust",cls:"tag-trust"},
+{decl:"I will lie down and sleep in peace because the Lord sustains me. I will not fear though thousands set themselves against me. God is my sustainer and the lifter of my head tonight and every night!",verse:"I laid me down and slept; I awaked; for the LORD sustained me. I will not be afraid of ten thousands of people, that have set themselves against me round about.",ref:"Psalm 3:5\u20136",tag:"Rest",cls:"tag-rest"},
+{decl:"The Lord is my shepherd all through the night. Even in the darkest valley He is there. He restores my soul. By morning His restoration will be complete and I will rise ready to walk in His righteousness!",verse:"The LORD is my shepherd; I shall not want\u2026 Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me.",ref:"Psalm 23:1,4",tag:"Rest",cls:"tag-rest"},
+{decl:"I meditate on God\u2019s Word as I prepare for sleep. I remember Him upon my bed and meditate on Him in the night watches. My final thoughts belong to Him. My last words tonight are words of praise and trust!",verse:"When I remember thee upon my bed, and meditate on thee in the night watches: because thou hast been my help, therefore in the shadow of thy wings will I rejoice.",ref:"Psalm 63:6\u20137",tag:"Rest",cls:"tag-rest"},
+{decl:"I have been crucified with Christ. His love for me does not diminish at night. He gave everything for me. Tonight I rest in the love of the Son of God who loved me and gave Himself for me!",verse:"I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.",ref:"Galatians 2:20",tag:"Trust",cls:"tag-trust"},
+{decl:"God\u2019s plans for me are for peace and not for evil \u2014 to give me a future and a hope. My tomorrow is planned by God and it is good. I close my eyes tonight on a future that is secure in His hands!",verse:"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",ref:"Jeremiah 29:11",tag:"Trust",cls:"tag-trust"},
+{decl:"Father, as I close this day I thank You for Your mercies. You have kept me. You have been faithful. Tomorrow Your mercies are new again. I rest tonight in the faithfulness of a God who never sleeps!",verse:"The LORD\u2019s mercies are new every morning: great is thy faithfulness.",ref:"Lamentations 3:23",tag:"Trust",cls:"tag-trust"}
+],
+
+// ═══════════════════════════════════════════════════ IN THIS MOMENT ════════
+// Each situation: 10 declarations
+
+sick:[
+{decl:"I receive my healing right now. Jesus bore my sickness and carried my pain to the cross. By His stripes I AM healed \u2014 past tense, finished, purchased, done. I am not trying to get healed. I am receiving what is already mine!",verse:"Surely he hath borne our griefs, and carried our sorrows\u2026 and with his stripes we are healed.",ref:"Isaiah 53:4\u20135",tag:"Healing",cls:"tag-healing"},
+{decl:"The Lord Himself is my healer. He is Jehovah Rapha \u2014 the God who heals. Not a God who used to heal or who heals occasionally. He IS my healer, right now, in this body, in this moment!",verse:"I am the LORD that healeth thee.",ref:"Exodus 15:26",tag:"Healing",cls:"tag-healing"},
+{decl:"God forgives all my sins and He heals ALL my diseases. Not some. Not most. All. I receive complete healing from the crown of my head to the soles of my feet in the name of Jesus!",verse:"Who forgiveth all thine iniquities; who healeth all thy diseases; who redeemeth thy life from destruction.",ref:"Psalm 103:3",tag:"Healing",cls:"tag-healing"},
+{decl:"God sent His Word and healed them and delivered them from their destructions. That Word is being sent into my body right now. Every organ, every cell, every system is receiving the healing Word of God!",verse:"He sent his word, and healed them, and delivered them from their destructions.",ref:"Psalm 107:20",tag:"Healing",cls:"tag-healing"},
+{decl:"The same Spirit that raised Jesus Christ from the dead lives in me. That resurrection life and power is quickening my mortal body right now. Divine health and healing flow through me by the Holy Spirit!",verse:"But if the Spirit of him that raised up Jesus from the dead dwell in you, he that raised up Christ from the dead shall also quicken your mortal bodies by his Spirit that dwelleth in you.",ref:"Romans 8:11",tag:"Healing",cls:"tag-healing"},
+{decl:"I shall not die but live and declare the works of the Lord! This sickness does not have the final word. God\u2019s Word has the final word. And His Word says I live. I live! I declare the works of the Lord!",verse:"I shall not die, but live, and declare the works of the LORD.",ref:"Psalm 118:17",tag:"Healing",cls:"tag-healing"},
+{decl:"Jesus went about healing all who were sick and oppressed of the devil. He is the same yesterday, today, and forever. He is not done healing. What He did then He does now and He is healing me today!",verse:"Jesus Christ the same yesterday, and to day, and for ever.",ref:"Hebrews 13:8",tag:"Healing",cls:"tag-healing"},
+{decl:"God\u2019s Word is medicine to my flesh. I take it as medicine right now. It is life to those who find it and health to all their flesh. I receive the medicine of God\u2019s Word into every part of my body today!",verse:"My son, attend to my words; incline thine ear unto my sayings\u2026 For they are life unto those that find them, and health to all their flesh.",ref:"Proverbs 4:20,22",tag:"Healing",cls:"tag-healing"},
+{decl:"Jesus took my infirmities and bore my sicknesses. I do not have to bear them. He already bore them at Calvary. I give this sickness to the One who already paid for my healing with His own body!",verse:"That it might be fulfilled which was spoken by Esaias the prophet, saying, Himself took our infirmities, and bare our sicknesses.",ref:"Matthew 8:17",tag:"Healing",cls:"tag-healing"},
+{decl:"By the authority of Jesus Christ I speak to this sickness and command it to leave my body now! My body is the temple of the Holy Spirit. Sickness has no legal right to occupy the temple of God. I evict it in Jesus\u2019 name!",verse:"Ye are the temple of the Holy Ghost which is in you, which ye have of God, and ye are not your own.",ref:"1 Corinthians 6:19",tag:"Healing",cls:"tag-healing"}
+],
+
+worried:[
+{decl:"I cast every worry and every care on the Lord right now. He cares for me deeply, personally, and completely. I am not designed to carry this weight. He is. I give it to Him and I receive His peace!",verse:"Casting all your care upon him; for he careth for you.",ref:"1 Peter 5:7",tag:"Peace",cls:"tag-peace"},
+{decl:"I refuse to be anxious about anything. Instead I bring everything to God right now with thanksgiving. As I do, I receive the peace of God that passes all understanding to guard my heart and mind. It is working right now!",verse:"Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",ref:"Philippians 4:6\u20137",tag:"Peace",cls:"tag-peace"},
+{decl:"God keeps me in perfect peace because my mind is stayed on Him. I make a decision right now to fix my mind on God and not on this problem. As I do, His perfect peace floods my heart and my mind!",verse:"Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",ref:"Isaiah 26:3",tag:"Peace",cls:"tag-peace"},
+{decl:"God has not given me a spirit of fear. This anxiety, this dread, this worry \u2014 it did not come from God. I reject it right now. God has given me power, love, and a sound mind and I walk in that!",verse:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",ref:"2 Timothy 1:7",tag:"Peace",cls:"tag-peace"},
+{decl:"I sought the Lord and He heard me and delivered me from all my fears. ALL of them. I bring every worry to Him right now. He hears me. He is already delivering me. I am not afraid!",verse:"I sought the LORD, and he heard me, and delivered me from all my fears.",ref:"Psalm 34:4",tag:"Peace",cls:"tag-peace"},
+{decl:"The Lord is my shepherd. He leads me beside still waters and He restores my soul. Even in the most turbulent season He leads me to a place of rest and stillness. I follow Him there right now!",verse:"He maketh me to lie down in green pastures: he leadeth me beside the still waters. He restoreth my soul.",ref:"Psalm 23:2\u20133",tag:"Peace",cls:"tag-peace"},
+{decl:"God works all things together for good for those who love Him. This situation that worries me \u2014 He is working it together for my good. Nothing is wasted. Nothing is out of His control. All things!",verse:"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",ref:"Romans 8:28",tag:"Trust",cls:"tag-trust"},
+{decl:"The peace of Jesus is mine. Not as the world gives \u2014 conditional, fragile, dependent on circumstances. Jesus gives peace that holds when everything else is shaking. I receive that peace right now!",verse:"Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",ref:"John 14:27",tag:"Peace",cls:"tag-peace"},
+{decl:"I will not fear for God is with me. I will not be dismayed for He is my God. He strengthens me, He helps me, He upholds me with His righteous right hand. He is holding me right now. I am not alone!",verse:"Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",ref:"Isaiah 41:10",tag:"Peace",cls:"tag-peace"},
+{decl:"God has plans for my future and they are good \u2014 plans for peace, not for evil, to give me a hope and a future. My situation is not outside His plan. He already knows the end of this story and it is good!",verse:"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",ref:"Jeremiah 29:11",tag:"Trust",cls:"tag-trust"}
+],
+
+broken:[
+{decl:"The Lord is close to me in this broken place. He does not despise a broken and contrite heart \u2014 He is near to it. He is near to me right now. He sees me, He hears me, and He is here!",verse:"The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.",ref:"Psalm 34:18",tag:"Comfort",cls:"tag-comfort"},
+{decl:"God heals the brokenhearted and binds up all their wounds. My heart is broken but it is in the hands of the Healer. He is binding every wound right now \u2014 one by one \u2014 with the gentle hands of the Father!",verse:"He healeth the broken in heart, and bindeth up their wounds.",ref:"Psalm 147:3",tag:"Comfort",cls:"tag-comfort"},
+{decl:"God gives beauty for ashes, the oil of joy for mourning, the garment of praise for the spirit of heaviness. I give Him my ashes right now and I receive beauty. I give Him my mourning and receive His joy!",verse:"To appoint unto them that mourn in Zion, to give unto them beauty for ashes, the oil of joy for mourning, the garment of praise for the spirit of heaviness.",ref:"Isaiah 61:3",tag:"Comfort",cls:"tag-comfort"},
+{decl:"Weeping may endure for a night but joy comes in the morning. I am in the night season right now but morning is coming. God\u2019s joy is on its way to me and nothing can stop it from arriving!",verse:"Weeping may endure for a night, but joy cometh in the morning.",ref:"Psalm 30:5",tag:"Comfort",cls:"tag-comfort"},
+{decl:"God comforts me in all my tribulation with the same comfort He Himself receives. He knows what suffering feels like. He has felt grief. He is not distant from my pain \u2014 He is in it with me right now!",verse:"Who comforteth us in all our tribulation, that we may be able to comfort them which are in any trouble, by the comfort wherewith we ourselves are comforted of God.",ref:"2 Corinthians 1:4",tag:"Comfort",cls:"tag-comfort"},
+{decl:"Come unto me, all ye that labour and are heavy laden, and I will give you rest. That is what Jesus said to me today. He is calling me to come. I come to Him right now with every heavy thing and I receive His rest!",verse:"Come unto me, all ye that labour and are heavy laden, and I will give you rest.",ref:"Matthew 11:28",tag:"Comfort",cls:"tag-comfort"},
+{decl:"God restores my soul. Even in this valley, even in this shadow, He restores me. He does not leave me broken \u2014 He leads me in paths of righteousness. Restoration is already at work in me right now!",verse:"He restoreth my soul: he leadeth me in the paths of righteousness for his name\u2019s sake.",ref:"Psalm 23:3",tag:"Comfort",cls:"tag-comfort"},
+{decl:"Even in this grief, God is working all things together for my good. This pain is not the end of my story. This loss is not the final chapter. God is writing something beyond what I can see right now!",verse:"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",ref:"Romans 8:28",tag:"Comfort",cls:"tag-comfort"},
+{decl:"The Lord Himself will fight for me. I do not have to fix this, defend myself, or carry this weight alone. I can hold my peace because God is fighting this battle. He fights for His children and He fights for me!",verse:"The LORD shall fight for you, and ye shall hold your peace.",ref:"Exodus 14:14",tag:"Comfort",cls:"tag-comfort"},
+{decl:"I am not crushed, I am not destroyed, I am not forsaken, I am not abandoned. I may be hard pressed on every side but God is in the midst of this and He will not let me be destroyed. I will come through!",verse:"We are troubled on every side, yet not distressed; we are perplexed, but not in despair; persecuted, but not forsaken; cast down, but not destroyed.",ref:"2 Corinthians 4:8\u20139",tag:"Comfort",cls:"tag-comfort"}
+],
+
+financial:[
+{decl:"My God supplies ALL my need according to His riches in glory by Christ Jesus. Not some needs. Not most. ALL. He is not limited by the economy, my job, or my circumstances. He is rich in glory and I am His child!",verse:"My God shall supply all your need according to his riches in glory by Christ Jesus.",ref:"Philippians 4:19",tag:"Provision",cls:"tag-provision"},
+{decl:"The Lord is my Shepherd and I SHALL NOT WANT. That is not wishful thinking \u2014 that is a covenant declaration. I will not be in lack. I will not be in want. My Shepherd has never let His flock go hungry!",verse:"The LORD is my shepherd; I shall not want.",ref:"Psalm 23:1",tag:"Provision",cls:"tag-provision"},
+{decl:"God opens the windows of heaven over my life and rebukes the devourer for my sake. Every financial attack against me is rebuked. Every leak in my finances is stopped. Heaven is open and pouring over my life!",verse:"Bring ye all the tithes into the storehouse\u2026 if I will not open you the windows of heaven, and pour you out a blessing, that there shall not be room enough to receive it. And I will rebuke the devourer for your sakes.",ref:"Malachi 3:10\u201311",tag:"Provision",cls:"tag-provision"},
+{decl:"God gives me the power to get wealth to establish His covenant on the earth. My prosperity is His idea. He has anointed me with the power to produce wealth and I activate that anointing right now!",verse:"But thou shalt remember the LORD thy God: for it is he that giveth thee power to get wealth, that he may establish his covenant.",ref:"Deuteronomy 8:18",tag:"Provision",cls:"tag-provision"},
+{decl:"I have never seen the righteous forsaken or their children begging bread. God has never abandoned His own. That promise is mine. My family will be provided for. I call it done in Jesus\u2019 name!",verse:"I have been young, and now am old; yet have I not seen the righteous forsaken, nor his seed begging bread.",ref:"Psalm 37:25",tag:"Provision",cls:"tag-provision"},
+{decl:"The Lord commands the blessing on my storehouse and on everything I set my hand to. His blessing is not accidental \u2014 it is commanded from heaven. The work of my hands is blessed. My finances are blessed!",verse:"The LORD shall command the blessing upon thee in thy storehouses, and in all that thou settest thine hand unto.",ref:"Deuteronomy 28:8",tag:"Provision",cls:"tag-provision"},
+{decl:"I give and it is given back to me \u2014 good measure, pressed down, shaken together, running over! I am a giver and God ensures that givers never lack. I speak abundance over my life right now in Jesus\u2019 name!",verse:"Give, and it shall be given unto you; good measure, pressed down, and shaken together, and running over, shall men give into your bosom.",ref:"Luke 6:38",tag:"Provision",cls:"tag-provision"},
+{decl:"God who did not spare His own Son will freely give me all things I need. The greatest gift has already been given. If He gave me Jesus, He will not withhold provision. All things are mine in Christ!",verse:"He that spared not his own Son, but delivered him up for us all, how shall he not with him also freely give us all things?",ref:"Romans 8:32",tag:"Provision",cls:"tag-provision"},
+{decl:"I seek first the kingdom of God and His righteousness, and all the things I need are added to me. I don\u2019t chase money \u2014 I chase God. And the blessing of provision chases me. I seek Him first today!",verse:"But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",ref:"Matthew 6:33",tag:"Provision",cls:"tag-provision"},
+{decl:"God is able to do exceedingly abundantly above all I can ask or think. My financial need is not larger than God\u2019s ability. He exceeds what I ask. He exceeds what I can even imagine. He is exceedingly abundant!",verse:"Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us.",ref:"Ephesians 3:20",tag:"Provision",cls:"tag-provision"}
+],
+
+angry:[
+{decl:"I will be slow to anger today and slow to speak. The wrath of man does not produce the righteousness of God. I choose to respond with the wisdom and patience of God, not with the fire of my flesh!",verse:"Wherefore, my beloved brethren, let every man be swift to hear, slow to speak, slow to wrath: For the wrath of man worketh not the righteousness of God.",ref:"James 1:19\u201320",tag:"Anger",cls:"tag-anger"},
+{decl:"I choose to be angry and sin not. I will not let the sun go down on my wrath. I will not give the devil a foothold in my emotions today. I close every door of bitterness in my heart right now in Jesus\u2019 name!",verse:"Be ye angry, and sin not: let not the sun go down upon your wrath: Neither give place to the devil.",ref:"Ephesians 4:26\u201327",tag:"Anger",cls:"tag-anger"},
+{decl:"I choose to forgive. As God in Christ has forgiven me, I forgive. Not because they deserve it but because I am forgiven. Bitterness is a prison and I choose freedom. I release this offense to God right now!",verse:"And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ\u2019s sake hath forgiven you.",ref:"Ephesians 4:32",tag:"Anger",cls:"tag-anger"},
+{decl:"Vengeance belongs to the Lord and He will repay. I do not need to defend myself, retaliate, or get even. I give this to God and trust that He is a God of justice. He will make it right in His time and His way!",verse:"Dearly beloved, avenge not yourselves, but rather give place unto wrath: for it is written, Vengeance is mine; I will repay, saith the Lord.",ref:"Romans 12:19",tag:"Anger",cls:"tag-anger"},
+{decl:"God is my defender and my vindicator. I do not need to fight this battle myself. He will fight for me. I hold my peace and I trust Him to bring justice. The Lord Himself will take up my cause!",verse:"The LORD shall fight for you, and ye shall hold your peace.",ref:"Exodus 14:14",tag:"Victory",cls:"tag-victory"},
+{decl:"I put away all bitterness, wrath, anger, clamor, and evil speaking. I put it all away from me. In its place I choose kindness, tenderheartedness, and forgiveness. I make that exchange right now before God!",verse:"Let all bitterness, and wrath, and anger, and clamour, and evil speaking, be put away from you, with all malice: And be ye kind one to another, tenderhearted, forgiving one another.",ref:"Ephesians 4:31\u201332",tag:"Anger",cls:"tag-anger"},
+{decl:"A soft answer turns away wrath. I choose to respond with a soft answer today. I will not add fuel to this fire. I will not escalate. I will be the peace in this storm because Christ is the peace in me!",verse:"A soft answer turneth away wrath: but grievous words stir up anger.",ref:"Proverbs 15:1",tag:"Wisdom",cls:"tag-wisdom"},
+{decl:"Greater is He that is in me than he that is in the world. The Holy Spirit in me is greater than the anger in me. I yield to the Spirit right now. He produces in me love, joy, peace, patience \u2014 not anger!",verse:"Ye are of God, little children, and have overcome them: because greater is he that is in you, than he that is in the world.",ref:"1 John 4:4",tag:"Strength",cls:"tag-strength"},
+{decl:"I bless those who have hurt me and I do not curse them. This is not weakness \u2014 this is the power of the Kingdom. I refuse to let what they did determine who I am. I choose to be like Christ in this moment!",verse:"Bless them which persecute you: bless, and curse not.",ref:"Romans 12:14",tag:"Anger",cls:"tag-anger"},
+{decl:"I overcome evil with good. I will not be overcome by this offense, this hurt, this anger. I overcome it by choosing the goodness of God. What the enemy meant for evil, God will turn for good. I choose good!",verse:"Be not overcome of evil, but overcome evil with good.",ref:"Romans 12:21",tag:"Victory",cls:"tag-victory"}
+],
+
+grateful:[
+{decl:"I enter His gates with thanksgiving and His courts with praise right now! I am thankful. I am grateful. I bless His name and I declare: the Lord is good, His mercy is everlasting, and His truth endures forever!",verse:"Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name. For the LORD is good; his mercy is everlasting; and his truth endureth to all generations.",ref:"Psalm 100:4\u20135",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"I give thanks to God in everything \u2014 for this is the will of God in Christ Jesus concerning me. My gratitude is not just an emotion. It is an act of obedience and an act of faith. I thank You, Lord, for all of it!",verse:"In every thing give thanks: for this is the will of God in Christ Jesus concerning you.",ref:"1 Thessalonians 5:18",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"Bless the Lord, O my soul, and all that is within me, bless His holy name! I will not forget all His benefits. He has forgiven me, He has healed me, He has redeemed me. He has been too good to me for silence!",verse:"Bless the LORD, O my soul: and all that is within me, bless his holy name. Bless the LORD, O my soul, and forget not all his benefits.",ref:"Psalm 103:1\u20132",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"The Lord has done great things for me and I am glad! I declare it openly. I will not keep it private. He has been faithful, He has been good, He has shown up in my life again and again. Great is the Lord!",verse:"The LORD hath done great things for us; whereof we are glad.",ref:"Psalm 126:3",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"O give thanks to the Lord for He is good and His mercy endures forever! I am alive. I am breathing. I am standing. I have another day with the God who loves me. That alone is more than enough to be grateful for!",verse:"O give thanks unto the LORD; for he is good: for his mercy endureth for ever.",ref:"Psalm 136:1",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"I taste and see that the Lord is good! I have experienced His goodness in my own life. He has been real to me, faithful to me, present with me. I declare with gratitude: God is good and He is good to me!",verse:"O taste and see that the LORD is good: blessed is the man that trusteth in him.",ref:"Psalm 34:8",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"Thanks be to God who gives me the victory through my Lord Jesus Christ! Not just in some areas but complete victory. I am on the winning side. I belong to the God who wins. I am grateful and I am victorious!",verse:"But thanks be to God, which giveth us the victory through our Lord Jesus Christ.",ref:"1 Corinthians 15:57",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"I will praise the Lord at all times. His praise will continually be in my mouth. In this grateful moment I magnify Him. My soul makes its boast in the Lord and let the humble hear and be glad!",verse:"I will bless the LORD at all times: his praise shall continually be in my mouth. My soul shall make her boast in the LORD: the humble shall hear thereof, and be glad.",ref:"Psalm 34:1\u20132",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"Thanks be to God for His indescribable gift! Jesus Christ. The greatest gift ever given. I am grateful for salvation, for the cross, for grace, for mercy, for the Holy Spirit. No words can contain this gratitude!",verse:"Thanks be unto God for his unspeakable gift.",ref:"2 Corinthians 9:15",tag:"Gratitude",cls:"tag-gratitude"},
+{decl:"I rejoice in the Lord always \u2014 and again I say, rejoice! In this moment of gratitude I rejoice with everything in me. His goodness is real, His faithfulness is certain, and my gratitude is an act of worship!",verse:"Rejoice in the Lord alway: and again I say, Rejoice.",ref:"Philippians 4:4",tag:"Gratitude",cls:"tag-gratitude"}
+],
+
+courage:[
+{decl:"I will be strong and courageous! I will not be afraid and I will not be dismayed because the Lord my God is with me wherever I go. He is with me in this challenge right now. I will not back down!",verse:"Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.",ref:"Joshua 1:9",tag:"Courage",cls:"tag-courage"},
+{decl:"God has not given me a spirit of fear but of power, love, and a sound mind. This fear I am feeling did not come from God. I refuse it. I receive instead the power, the love, and the sound mind He has given me!",verse:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",ref:"2 Timothy 1:7",tag:"Courage",cls:"tag-courage"},
+{decl:"I will not fear for God is with me. I will not be dismayed for He is my God. He strengthens me, He helps me, He upholds me with His righteous right hand. I am being held right now. I can face this!",verse:"Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",ref:"Isaiah 41:10",tag:"Courage",cls:"tag-courage"},
+{decl:"If God is for me, who can be against me? I look at who is for me, not at who is against me. The God who created the universe is on my side. What opposition could possibly stand against that?",verse:"If God be for us, who can be against us?",ref:"Romans 8:31",tag:"Courage",cls:"tag-courage"},
+{decl:"I am more than a conqueror through Christ who loves me! I do not merely survive this \u2014 I conquer it. The outcome of this battle is not in question. I am on the winning side and I press forward in that confidence!",verse:"Nay, in all these things we are more than conquerors through him that loved us.",ref:"Romans 8:37",tag:"Victory",cls:"tag-victory"},
+{decl:"I can do all things through Christ who strengthens me. Not just the easy things \u2014 ALL things. This hard thing in front of me is included in ALL things. Christ is my strength and I step forward now!",verse:"I can do all things through Christ which strengtheneth me.",ref:"Philippians 4:13",tag:"Courage",cls:"tag-courage"},
+{decl:"The Lord is my light and my salvation \u2014 whom shall I fear? The Lord is the strength of my life \u2014 of whom shall I be afraid? I name this fear and I bring it before my God. He is bigger. He is greater. I am not afraid!",verse:"The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?",ref:"Psalm 27:1",tag:"Courage",cls:"tag-courage"},
+{decl:"Greater is He that is in me than he that is in the world. The Holy Spirit inside me is greater than the giant in front of me. I do not face this with my own strength. I face it with the Greater One!",verse:"Ye are of God, little children, and have overcome them: because greater is he that is in you, than he that is in the world.",ref:"1 John 4:4",tag:"Courage",cls:"tag-courage"},
+{decl:"The Lord Himself goes before me. He will be with me. He will not fail me or forsake me. I will not fear and I will not be dismayed. He has already gone ahead into what I am about to face. The path is prepared!",verse:"The LORD himself goeth before thee; he will be with thee, he will not fail thee, neither forsake thee: fear not, neither be dismayed.",ref:"Deuteronomy 31:8",tag:"Courage",cls:"tag-courage"},
+{decl:"I put on the whole armor of God and I stand. I will not retreat. I will not surrender. I will stand in the strength of His might and having done all, I will stand. I am standing right now in the victory of Christ!",verse:"Wherefore take unto you the whole armour of God, that ye may be able to withstand in the evil day, and having done all, to stand.",ref:"Ephesians 6:13",tag:"Courage",cls:"tag-courage"}
+],
+
+outofcontrol:[
+{decl:"God is in control of everything that feels out of my control right now. He is not surprised by this situation. He is not scrambling for a solution. He is God and He has this completely in His hands!",verse:"Our God is in the heavens: he hath done whatsoever he hath pleased.",ref:"Psalm 115:3",tag:"Control",cls:"tag-control"},
+{decl:"I trust in the Lord with all my heart and I do not lean on my own understanding. In this moment when I cannot understand what is happening, I choose to lean on God, not on my own analysis. He directs my path!",verse:"Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",ref:"Proverbs 3:5\u20136",tag:"Trust",cls:"tag-trust"},
+{decl:"Be still and know that He is God. Right now I stop striving. I stop trying to control the uncontrollable. I be still. I acknowledge that He is God and I am not. He is exalted over everything I see right now!",verse:"Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.",ref:"Psalm 46:10",tag:"Control",cls:"tag-control"},
+{decl:"God is my refuge and strength \u2014 a very present help in trouble. He is not far away. He is present right now in the middle of this chaos. He is here with me, He is my refuge, and He is holding everything together!",verse:"God is our refuge and strength, a very present help in trouble. Therefore will not we fear, though the earth be removed.",ref:"Psalm 46:1\u20132",tag:"Control",cls:"tag-control"},
+{decl:"God works all things together for good for those who love Him. THINGS \u2014 plural, all of them, including the things that feel out of control right now. He is working even this together for my good!",verse:"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",ref:"Romans 8:28",tag:"Trust",cls:"tag-trust"},
+{decl:"The Lord is my shepherd. I am in His care and He watches over every detail of my life. A shepherd does not panic when the path gets rough. He navigates it. My Shepherd is navigating this right now!",verse:"The LORD is my shepherd; I shall not want.",ref:"Psalm 23:1",tag:"Control",cls:"tag-control"},
+{decl:"God has not given me a spirit of fear. The chaos I see, the things I cannot control \u2014 they do not dictate my emotional state. God has given me a sound mind and I operate in that sound mind right now!",verse:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",ref:"2 Timothy 1:7",tag:"Peace",cls:"tag-peace"},
+{decl:"I cast every care \u2014 every uncontrollable thing \u2014 onto the Lord right now. He can carry what I cannot. He can manage what is beyond my management. He cares for me and He is taking this from my hands!",verse:"Casting all your care upon him; for he careth for you.",ref:"1 Peter 5:7",tag:"Trust",cls:"tag-trust"},
+{decl:"I do not know what to do but my eyes are on God. This is my position in this moment \u2014 eyes on Him, not on the storm. Where my eyes go, my faith goes. I fix my eyes on the God who controls all things!",verse:"We know not what to do: but our eyes are upon thee.",ref:"2 Chronicles 20:12",tag:"Trust",cls:"tag-trust"},
+{decl:"God is able to do exceedingly abundantly above all I can ask or think. This situation that is beyond my ability is not beyond His. His ability exceeds my imagination. He can handle what I cannot. He is God!",verse:"Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us.",ref:"Ephesians 3:20",tag:"Trust",cls:"tag-trust"}
+],
+
+direction:[
+{decl:"In all my ways I acknowledge Him and He directs my paths. I acknowledge God in this decision right now. I submit this path to Him. He is already directing my steps and I trust where He leads!",verse:"In all thy ways acknowledge him, and he shall direct thy paths.",ref:"Proverbs 3:6",tag:"Direction",cls:"tag-direction"},
+{decl:"God will show me great and mighty things which I do not yet know. I am calling on Him right now for direction and He promises to answer me. He will show me things I cannot see with my natural eyes!",verse:"Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",ref:"Jeremiah 33:3",tag:"Direction",cls:"tag-direction"},
+{decl:"I trust in the Lord with all my heart. I am not leaning on my own understanding in this. In all my ways I acknowledge Him and He is straightening my path right now. He makes my way clear!",verse:"Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",ref:"Proverbs 3:5\u20136",tag:"Direction",cls:"tag-direction"},
+{decl:"God orders my steps and He delights in my way. My steps are not random or accidental. Every step I take is ordered by God. I will not miss my divine appointment. He is ordering my steps right now!",verse:"The steps of a good man are ordered by the LORD: and he delighteth in his way.",ref:"Psalm 37:23",tag:"Direction",cls:"tag-direction"},
+{decl:"I lack wisdom and I ask God for it right now. He gives to all liberally and without reproach. As I ask, I receive wisdom for this decision, this path, this situation. God\u2019s wisdom is being poured into me right now!",verse:"If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",ref:"James 1:5",tag:"Wisdom",cls:"tag-wisdom"},
+{decl:"God will instruct me and teach me in the way I should go. He will guide me with His eye. I will not stumble down the wrong path. He is watching over my way and His guidance is active in my life right now!",verse:"I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.",ref:"Psalm 32:8",tag:"Direction",cls:"tag-direction"},
+{decl:"A man\u2019s heart plans his way but the Lord directs his steps. My planning is good but God\u2019s direction is greater. I submit my plans to Him and trust Him to redirect what needs redirecting. He directs my steps!",verse:"A man's heart deviseth his way: but the LORD directeth his steps.",ref:"Proverbs 16:9",tag:"Direction",cls:"tag-direction"},
+{decl:"God goes before me. He has already been to where I am going. He has already prepared the way. I do not walk into the unknown alone \u2014 I follow the One who has already gone ahead and prepared the path for me!",verse:"The LORD himself goeth before thee; he will be with thee, he will not fail thee, neither forsake thee: fear not, neither be dismayed.",ref:"Deuteronomy 31:8",tag:"Direction",cls:"tag-direction"},
+{decl:"I have the mind of Christ. I think with the thoughts of God. When I need clarity and direction, the mind of Christ in me provides it. I tap into the wisdom of God that lives inside me right now!",verse:"For who hath known the mind of the Lord, that he may instruct him? But we have the mind of Christ.",ref:"1 Corinthians 2:16",tag:"Wisdom",cls:"tag-wisdom"},
+{decl:"God\u2019s Word is a lamp to my feet and a light to my path. It does not illuminate the whole road at once \u2014 it gives me light for the next step. I will take the next step I can see and trust God to light the one after that!",verse:"Thy word is a lamp unto my feet, and a light unto my path.",ref:"Psalm 119:105",tag:"Direction",cls:"tag-direction"}
+],
+
+restore:[
+{decl:"God restores the years that the locusts have eaten. What the enemy has stolen, devoured, and destroyed over the years \u2014 God will restore. He is a restoring God and He is restoring what has been lost in this relationship!",verse:"And I will restore to you the years that the locust hath eaten, the cankerworm, and the caterpiller, and the palmerworm.",ref:"Joel 2:25",tag:"Restore",cls:"tag-restore"},
+{decl:"As God in Christ has forgiven me, I choose to forgive. I release the offense, the hurt, the wound right now. Forgiveness is not excusing what happened \u2014 it is releasing it to God. I release it to Him today!",verse:"And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ\u2019s sake hath forgiven you.",ref:"Ephesians 4:32",tag:"Restore",cls:"tag-restore"},
+{decl:"God is the Father who runs to meet the prodigal. He is the God of restoration and reconciliation. I believe He can restore this relationship. I open my heart to what He wants to do here right now!",verse:"But when he was yet a great way off, his father saw him, and had compassion, and ran, and fell on his neck, and kissed him.",ref:"Luke 15:20",tag:"Restore",cls:"tag-restore"},
+{decl:"Love covers a multitude of sins. Where there has been hurt and offense between us, I choose to cover it in love. I do not excuse wrong but I choose love over resentment, restoration over rejection!",verse:"And above all things have fervent charity among yourselves: for charity shall cover the multitude of sins.",ref:"1 Peter 4:8",tag:"Restore",cls:"tag-restore"},
+{decl:"God gives beauty for ashes. What feels like the ashes of this relationship right now \u2014 He is able to make something beautiful from it. I give Him the ashes and I trust Him to bring the beauty in His time!",verse:"To appoint unto them that mourn in Zion, to give unto them beauty for ashes, the oil of joy for mourning, the garment of praise for the spirit of heaviness.",ref:"Isaiah 61:3",tag:"Restore",cls:"tag-restore"},
+{decl:"If it is possible, as much as lies in me, I will live at peace with all men. I cannot control the other person\u2019s response. But I can control mine. I choose peace. I choose to do my part and trust God with theirs!",verse:"If it be possible, as much as lieth in you, live peaceably with all men.",ref:"Romans 12:18",tag:"Restore",cls:"tag-restore"},
+{decl:"A soft answer turns away wrath. I will speak with a soft voice, a humble heart, and words of grace in this situation. I will not add to the conflict. I will be the one who brings peace, because Christ brought peace to me!",verse:"A soft answer turneth away wrath: but grievous words stir up anger.",ref:"Proverbs 15:1",tag:"Restore",cls:"tag-restore"},
+{decl:"God is the God of all comfort who comforts us in all our tribulation. He knows what this hurt feels like. He was wounded for our transgressions. He understands relational pain and He is healing mine right now!",verse:"Who comforteth us in all our tribulation, that we may be able to comfort them which are in any trouble.",ref:"2 Corinthians 1:4",tag:"Restore",cls:"tag-restore"},
+{decl:"I will not repay evil for evil or railing for railing. I will bless instead. In doing so I inherit a blessing myself. I break the cycle of hurt right now by choosing to respond the way Christ responds \u2014 with grace!",verse:"Not rendering evil for evil, or railing for railing: but contrariwise blessing; knowing that ye are thereunto called, that ye should inherit a blessing.",ref:"1 Peter 3:9",tag:"Restore",cls:"tag-restore"},
+{decl:"God can do exceedingly abundantly above all I could ask or think in this relationship. I believe He can restore what seems broken beyond repair. I bring this relationship before Him and I ask Him to do what only He can do!",verse:"Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us.",ref:"Ephesians 3:20",tag:"Restore",cls:"tag-restore"}
+]
+
+}; // end VERSES
+
+// ─────────────────────────────────────────────────────────────────────────────
+function pick(arr,n){var c=arr.slice();for(var i=c.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=c[i];c[i]=c[j];c[j]=t;}return c.slice(0,n);}
+
+function renderCards(arr, containerId) {
+  var container = document.getElementById(containerId);
+  var html = '';
+  for(var i=0;i<arr.length;i++){
+    var v=arr[i];
+    html+='<div class="verse-card">'+
+      '<div class="declaration-tag '+v.cls+'">'+v.tag+'</div>'+
+      '<div class="decl-text">'+v.decl+'</div>'+
+      '<div class="scripture-divider"><span class="scripture-label">Scripture</span></div>'+
+      '<div class="scripture-text">\u201C'+v.verse+'\u201D</div>'+
+      '<div class="verse-ref">\u2014 '+v.ref+'</div>'+
+    '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function loadVerses(tab){
+  renderCards(pick(VERSES[tab],5),'verses-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+var SITUATION_LABELS = {
+  sick:'When I Am Sick',
+  worried:'When I Am Worried or Afraid',
+  broken:'When I Am Broken or Grieving',
+  financial:'When I Am in Financial Need',
+  angry:'When I Am Angry or Offended',
+  grateful:'When I Am Grateful',
+  courage:'When I Need Courage',
+  outofcontrol:'When Life Feels Out of Control',
+  direction:'When I Need Direction',
+  restore:'When I Need Restoration'
+};
+
+function selectSituation(key){
+  // deselect all
+  var btns = document.querySelectorAll('.sit-btn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('selected');
+  // select chosen
+  document.getElementById('sit-'+key).classList.add('selected');
+  currentSituation = key;
+  // set title
+  document.getElementById('moment-title').textContent = SITUATION_LABELS[key];
+  // render verses
+  renderCards(pick(VERSES[key],5),'verses-moment');
+  // show area
+  document.getElementById('moment-verses').classList.add('visible');
+  // scroll down past grid
+  setTimeout(function(){
+    var el = document.getElementById('moment-verses');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 100);
+}
+
+function refreshMoment(){
+  if(currentSituation){
+    renderCards(pick(VERSES[currentSituation],5),'verses-moment');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function switchTab(name){
+  var panels=document.querySelectorAll('.tab-content');
+  var btns=document.querySelectorAll('.tab-btn');
+  for(var i=0;i<panels.length;i++) panels[i].classList.remove('active');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name!=='moment'){
+    var c=document.getElementById('verses-'+name);
+    if(!c.innerHTML.trim()) loadVerses(name);
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+loadVerses('morning');
+</script>
 </body>
 </html>
