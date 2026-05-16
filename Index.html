@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Bible Speak KJV</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap');
+        body {
+            font-family: 'Roboto', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {font-family:'Playfair Display',serif; text-align:center; margin:10px 0 5px; font-size:1.8em;}
+        .date {text-align:center; opacity:0.9; margin-bottom:15px; font-size:1.05em;}
+        .tabs {display:flex; background:rgba(255,255,255,0.2); border-radius:12px; padding:4px; margin:15px 0; overflow-x:auto;}
+        .tab {flex:1; padding:12px 8px; text-align:center; border-radius:10px; cursor:pointer; font-weight:500; white-space:nowrap; font-size:0.95em;}
+        .tab.active {background:#fbbf24; color:#1e3a8a;}
+        .content {display:none;}
+        .content.active {display:block;}
+        .declaration {background:rgba(255,255,255,0.15); padding:18px; margin:12px 0; border-radius:12px; border-left:5px solid #fbbf24; word-wrap:break-word;}
+        button {background:#fbbf24; color:#1e3a8a; border:none; padding:15px 30px; font-size:1.1em; font-weight:bold; border-radius:50px; display:block; margin:20px auto; width:90%; max-width:300px;}
+        footer {text-align:center; margin-top:25px; opacity:0.85; font-size:0.9em;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 Bible Speak KJV</h1>
+        <p class="date" id="date"></p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">Morning</div>
+            <div class="tab" onclick="switchTab(1)">Prayers</div>
+            <div class="tab" onclick="switchTab(2)">Praises</div>
+            <div class="tab" onclick="switchTab(3)">Evening</div>
+        </div>
+
+        <div id="content-0" class="content active"><div id="morning"></div><button onclick="generateMorning()">New Morning</button></div>
+        <div id="content-1" class="content"><div id="prayers"></div><button onclick="generatePrayers()">New Prayers</button></div>
+        <div id="content-2" class="content"><div id="praises"></div><button onclick="generatePraises()">New Praises</button></div>
+        <div id="content-3" class="content"><div id="evening"></div><button onclick="generateEvening()">New Evening</button></div>
+
+        <footer>King James Version Inspired • Speak with faith</footer>
+    </div>
+
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+        const morningDB = [{t:"Praise",txt:"This is the day which the LORD hath made; I will rejoice and be glad in it.",ref:"Psalm 118:24"},{t:"Mercies",txt:"It is of the LORD'S mercies... they are new every morning.",ref:"Lamentations 3:22-23"},{t:"Seeking",txt:"Early will I seek thee, O God...",ref:"Psalm 63:1"}];
+        const prayersDB = [{t:"Wisdom",txt:"If any of you lack wisdom, let him ask of God...",ref:"James 1:5"},{t:"Protection",txt:"The LORD is my light... whom shall I fear?",ref:"Psalm 27:1"},{t:"Provision",txt:"My God shall supply all my need...",ref:"Philippians 4:19"}];
+        const praisesDB = [{t:"Holy",txt:"Holy, holy, holy, is the LORD of hosts...",ref:"Isaiah 6:3"},{t:"Greatness",txt:"O LORD our Lord, how excellent is thy name...",ref:"Psalm 8:1"}];
+        const eveningDB = [{t:"Rest",txt:"I will both lay me down in peace...",ref:"Psalm 4:8"},{t:"Thankful",txt:"It is a good thing to give thanks unto the LORD...",ref:"Psalm 92:1"}];
+
+        function generateSection(id, db) {
+            const c = document.getElementById(id); c.innerHTML = '';
+            [...db].sort(() => Math.random()-0.5).slice(0,4).forEach(d => {
+                const div = document.createElement('div'); div.className = 'declaration';
+                div.innerHTML = `<strong>${d.t}</strong><p>"${d.txt}"</p><p class="verse">— ${d.ref}</p>`;
+                c.appendChild(div);
+            });
+        }
+        function generateMorning(){generateSection('morning',morningDB);}
+        function generatePrayers(){generateSection('prayers',prayersDB);}
+        function generatePraises(){generateSection('praises',praisesDB);}
+        function generateEvening(){generateSection('evening',eveningDB);}
+        function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n)); document.querySelectorAll('.content').forEach((c,i)=>c.classList.toggle('active',i===n));}
+        window.onload = () => {generateMorning(); generatePrayers(); generatePraises(); generateEvening();};
+    </script>
+</body>
+</html>
