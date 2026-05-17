@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -75,25 +76,25 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
 
 /* TABS */
 .tabs {
-  display: flex; background: rgba(6,14,31,0.93);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+display: flex; background: rgba(6,14,31,0.93);
+border-bottom: 1px solid var(–border);
+overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
 }
 .tabs::-webkit-scrollbar { display: none; }
 .tab-btn {
-  flex: 0 0 auto; min-width: 68px; padding: 10px 8px 8px;
-  background: none; border: none; color: var(--text-dim);
-  font-family: 'Cinzel', serif; font-size: 7.5px; font-weight: 600;
-  letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-  border-bottom: 2px solid transparent;
-  position: relative; white-space: nowrap; line-height: 1.5;
+flex: 0 0 auto; min-width: 68px; padding: 10px 8px 8px;
+background: none; border: none; color: var(–text-dim);
+font-family: ‘Cinzel’, serif; font-size: 7.5px; font-weight: 600;
+letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
+transition: color 0.2s, border-color 0.2s;
+border-bottom: 2px solid transparent;
+position: relative; white-space: nowrap; line-height: 1.5;
 }
 .tab-btn .tab-icon { display: block; font-size: 16px; margin-bottom: 2px; }
-.tab-btn.active { color: var(--gold-bright); border-bottom-color: var(--gold); }
+.tab-btn.active { color: var(–gold-bright); border-bottom-color: var(–gold); }
 .tab-btn.active::after {
-  content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
-  width: 4px; height: 4px; background: var(--gold); border-radius: 50%;
+content: ‘’; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+width: 4px; height: 4px; background: var(–gold); border-radius: 50%;
 }
 
 /* PANELS */
@@ -101,57 +102,57 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
 .tab-content.active { display: block; }
 @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 .panel-header { text-align: center; margin-bottom: 6px; }
-.panel-title { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; color: var(--gold-bright); letter-spacing: 2px; margin-bottom: 3px; }
-.panel-subtitle { font-style: italic; font-size: 13px; color: var(--text-dim); }
+.panel-title { font-family: ‘Cinzel’, serif; font-size: 16px; font-weight: 600; color: var(–gold-bright); letter-spacing: 2px; margin-bottom: 3px; }
+.panel-subtitle { font-style: italic; font-size: 13px; color: var(–text-dim); }
 
 .declare-prompt {
-  background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.18);
-  border-radius: 8px; padding: 9px 13px; margin: 10px 0 16px;
-  font-size: 12px; font-style: italic; color: var(--text-dim); text-align: center; line-height: 1.5;
+background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.18);
+border-radius: 8px; padding: 9px 13px; margin: 10px 0 16px;
+font-size: 12px; font-style: italic; color: var(–text-dim); text-align: center; line-height: 1.5;
 }
-.declare-prompt strong { color: var(--gold); font-style: normal; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 1px; }
+.declare-prompt strong { color: var(–gold); font-style: normal; font-family: ‘Cinzel’, serif; font-size: 10px; letter-spacing: 1px; }
 
-/* SITUATION GRID — for the "In This Moment" tab */
+/* SITUATION GRID — for the “In This Moment” tab */
 .situation-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px; margin: 10px 0 18px;
+display: grid; grid-template-columns: 1fr 1fr;
+gap: 10px; margin: 10px 0 18px;
 }
 .sit-btn {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 8px;
-  cursor: pointer; text-align: center;
-  transition: border-color 0.2s, transform 0.15s, background 0.2s;
-  -webkit-appearance: none;
+background: var(–card-bg); border: 1px solid var(–border);
+border-radius: 10px; padding: 12px 8px;
+cursor: pointer; text-align: center;
+transition: border-color 0.2s, transform 0.15s, background 0.2s;
+-webkit-appearance: none;
 }
 .sit-btn:active { transform: scale(0.96); }
 .sit-btn.selected {
-  border-color: var(--gold);
-  background: rgba(201,168,76,0.12);
+border-color: var(–gold);
+background: rgba(201,168,76,0.12);
 }
 .sit-btn .sit-icon { font-size: 22px; display: block; margin-bottom: 5px; }
 .sit-btn .sit-label {
-  font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); line-height: 1.4;
+font-family: ‘Cinzel’, serif; font-size: 9px; font-weight: 600;
+letter-spacing: 1px; text-transform: uppercase; color: var(–text-dim); line-height: 1.4;
 }
-.sit-btn.selected .sit-label { color: var(--gold-bright); }
+.sit-btn.selected .sit-label { color: var(–gold-bright); }
 
 /* VERSE CARD */
 .verse-card {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 12px; padding: 18px 16px 16px; margin-bottom: 16px;
-  position: relative; overflow: hidden;
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  transition: transform 0.18s ease;
+background: var(–card-bg); border: 1px solid var(–border);
+border-radius: 12px; padding: 18px 16px 16px; margin-bottom: 16px;
+position: relative; overflow: hidden;
+backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+transition: transform 0.18s ease;
 }
 .verse-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.6;
+content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+background: linear-gradient(90deg, transparent, var(–gold), transparent); opacity: 0.6;
 }
 .verse-card:active { transform: scale(0.985); }
 .declaration-tag {
-  display: inline-block; font-size: 10px; font-family: 'Cinzel', serif;
-  letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy-deep);
-  background: var(--gold); padding: 2px 8px; border-radius: 20px; margin-bottom: 11px; font-weight: 600;
+display: inline-block; font-size: 10px; font-family: ‘Cinzel’, serif;
+letter-spacing: 1.5px; text-transform: uppercase; color: var(–navy-deep);
+background: var(–gold); padding: 2px 8px; border-radius: 20px; margin-bottom: 11px; font-weight: 600;
 }
 .tag-protection { background: #7eb8f7; }
 .tag-authority  { background: #f77e7e; }
@@ -176,22 +177,22 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
 .tag-control    { background: #a0c4f0; }
 .tag-restore    { background: #a0f0c4; }
 
-.decl-text { font-size: 19px; line-height: 1.65; color: var(--text-main); font-weight: 400; margin-bottom: 14px; letter-spacing: 0.2px; }
+.decl-text { font-size: 19px; line-height: 1.65; color: var(–text-main); font-weight: 400; margin-bottom: 14px; letter-spacing: 0.2px; }
 .scripture-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.scripture-divider::before, .scripture-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
-.scripture-label { font-family: 'Cinzel', serif; font-size: 8.5px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; white-space: nowrap; }
-.scripture-text { font-size: 13.5px; line-height: 1.6; color: var(--text-verse); font-style: italic; font-weight: 300; margin-bottom: 9px; }
-.verse-ref { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 1.5px; color: var(--gold); text-align: right; opacity: 0.85; }
+.scripture-divider::before, .scripture-divider::after { content: ‘’; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(–border), transparent); }
+.scripture-label { font-family: ‘Cinzel’, serif; font-size: 8.5px; letter-spacing: 2px; color: var(–text-dim); text-transform: uppercase; white-space: nowrap; }
+.scripture-text { font-size: 13.5px; line-height: 1.6; color: var(–text-verse); font-style: italic; font-weight: 300; margin-bottom: 9px; }
+.verse-ref { font-family: ‘Cinzel’, serif; font-size: 10px; letter-spacing: 1.5px; color: var(–gold); text-align: right; opacity: 0.85; }
 
 .refresh-wrap { text-align: center; margin-top: 6px; }
 .refresh-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, rgba(201,168,76,0.18) 0%, rgba(201,168,76,0.08) 100%);
-  border: 1px solid var(--gold); color: var(--gold-bright);
-  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600;
-  letter-spacing: 2px; text-transform: uppercase;
-  padding: 12px 22px; border-radius: 40px; cursor: pointer;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s; -webkit-appearance: none;
+display: inline-flex; align-items: center; gap: 8px;
+background: linear-gradient(135deg, rgba(201,168,76,0.18) 0%, rgba(201,168,76,0.08) 100%);
+border: 1px solid var(–gold); color: var(–gold-bright);
+font-family: ‘Cinzel’, serif; font-size: 11px; font-weight: 600;
+letter-spacing: 2px; text-transform: uppercase;
+padding: 12px 22px; border-radius: 40px; cursor: pointer;
+transition: background 0.2s, transform 0.15s, box-shadow 0.2s; -webkit-appearance: none;
 }
 .refresh-btn:active { transform: scale(0.95); background: rgba(201,168,76,0.28); box-shadow: 0 0 20px rgba(201,168,76,0.2); }
 .spin { display: inline-block; transition: transform 0.45s ease; }
@@ -201,12 +202,13 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
 #moment-verses { display: none; }
 #moment-verses.visible { display: block; }
 .moment-title {
-  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600;
-  color: var(--gold-bright); letter-spacing: 2px; text-align: center;
-  margin-bottom: 14px; padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
+font-family: ‘Cinzel’, serif; font-size: 13px; font-weight: 600;
+color: var(–gold-bright); letter-spacing: 2px; text-align: center;
+margin-bottom: 14px; padding-bottom: 8px;
+border-bottom: 1px solid var(–border);
 }
 </style>
+
 </head>
 <body>
 <div id="app">
@@ -227,6 +229,7 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
   </nav>
 
   <!-- MORNING -->
+
   <div class="tab-content active" id="panel-morning">
     <div class="panel-header"><div class="panel-title">Morning Declarations</div><div class="panel-subtitle">Command your day with God&#8217;s Word</div></div>
     <div class="declare-prompt"><strong>Speak these aloud.</strong> Read the declaration boldly in your own voice. The scripture beneath it is the Word of God it stands on.</div>
@@ -235,6 +238,7 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
   </div>
 
   <!-- PRAYERS -->
+
   <div class="tab-content" id="panel-prayers">
     <div class="panel-header"><div class="panel-title">Prayers &amp; Requests</div><div class="panel-subtitle">Stand on His covenant promises</div></div>
     <div class="declare-prompt"><strong>Pray His Word back to Him.</strong> Speak the declaration with faith, then present your request. God is bound by what He has spoken.</div>
@@ -243,6 +247,7 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
   </div>
 
   <!-- PRAISES -->
+
   <div class="tab-content" id="panel-praises">
     <div class="panel-header"><div class="panel-title">Praises &amp; Worship</div><div class="panel-subtitle">Declare who He is over your life</div></div>
     <div class="declare-prompt"><strong>Lift these up with your voice.</strong> Praise is a declaration. When you speak who God is, you release His power and confound the enemy.</div>
@@ -251,6 +256,7 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
   </div>
 
   <!-- EVENING -->
+
   <div class="tab-content" id="panel-evening">
     <div class="panel-header"><div class="panel-title">Evening Reflections</div><div class="panel-subtitle">Commend your night to His keeping</div></div>
     <div class="declare-prompt"><strong>Speak these before you sleep.</strong> Release your day and every burden. His angels are on watch. He gives His beloved rest.</div>
@@ -259,48 +265,52 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
   </div>
 
   <!-- IN THIS MOMENT -->
+
   <div class="tab-content" id="panel-moment">
     <div class="panel-header"><div class="panel-title">In This Moment</div><div class="panel-subtitle">Find the Word for where you are right now</div></div>
     <div class="declare-prompt"><strong>Choose your situation.</strong> Tap what you are facing right now and receive declarations specifically for this moment.</div>
 
-    <div class="situation-grid">
-      <button class="sit-btn" onclick="selectSituation('sick')" id="sit-sick">
-        <span class="sit-icon">🤒</span><span class="sit-label">When I Am Sick</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('worried')" id="sit-worried">
-        <span class="sit-icon">😰</span><span class="sit-label">When I Am Worried</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('broken')" id="sit-broken">
-        <span class="sit-icon">💔</span><span class="sit-label">When I Am Broken</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('financial')" id="sit-financial">
-        <span class="sit-icon">💸</span><span class="sit-label">Financial Need</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('angry')" id="sit-angry">
-        <span class="sit-icon">😤</span><span class="sit-label">When I Am Angry</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('grateful')" id="sit-grateful">
-        <span class="sit-icon">🙌</span><span class="sit-label">When I Am Grateful</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('courage')" id="sit-courage">
-        <span class="sit-icon">🦁</span><span class="sit-label">When I Need Courage</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('outofcontrol')" id="sit-outofcontrol">
-        <span class="sit-icon">🌪️</span><span class="sit-label">Out of Control</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('direction')" id="sit-direction">
-        <span class="sit-icon">🧭</span><span class="sit-label">Need Direction</span>
-      </button>
-      <button class="sit-btn" onclick="selectSituation('restore')" id="sit-restore">
-        <span class="sit-icon">🤝</span><span class="sit-label">Need Restoration</span>
-      </button>
-    </div>
+```
+<div class="situation-grid">
+  <button class="sit-btn" onclick="selectSituation('sick')" id="sit-sick">
+    <span class="sit-icon">🤒</span><span class="sit-label">When I Am Sick</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('worried')" id="sit-worried">
+    <span class="sit-icon">😰</span><span class="sit-label">When I Am Worried</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('broken')" id="sit-broken">
+    <span class="sit-icon">💔</span><span class="sit-label">When I Am Broken</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('financial')" id="sit-financial">
+    <span class="sit-icon">💸</span><span class="sit-label">Financial Need</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('angry')" id="sit-angry">
+    <span class="sit-icon">😤</span><span class="sit-label">When I Am Angry</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('grateful')" id="sit-grateful">
+    <span class="sit-icon">🙌</span><span class="sit-label">When I Am Grateful</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('courage')" id="sit-courage">
+    <span class="sit-icon">🦁</span><span class="sit-label">When I Need Courage</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('outofcontrol')" id="sit-outofcontrol">
+    <span class="sit-icon">🌪️</span><span class="sit-label">Out of Control</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('direction')" id="sit-direction">
+    <span class="sit-icon">🧭</span><span class="sit-label">Need Direction</span>
+  </button>
+  <button class="sit-btn" onclick="selectSituation('restore')" id="sit-restore">
+    <span class="sit-icon">🤝</span><span class="sit-label">Need Restoration</span>
+  </button>
+</div>
 
-    <div id="moment-verses">
-      <div class="moment-title" id="moment-title"></div>
-      <div id="verses-moment"></div>
-      <div class="refresh-wrap"><button class="refresh-btn" onclick="refreshMoment()"><span class="spin">&#8635;</span> New Declarations</button></div>
-    </div>
+<div id="moment-verses">
+  <div class="moment-title" id="moment-title"></div>
+  <div id="verses-moment"></div>
+  <div class="refresh-wrap"><button class="refresh-btn" onclick="refreshMoment()"><span class="spin">&#8635;</span> New Declarations</button></div>
+</div>
+```
+
   </div>
 </div>
 
@@ -720,5 +730,6 @@ function switchTab(name){
 
 loadVerses('morning');
 </script>
+
 </body>
 </html>
