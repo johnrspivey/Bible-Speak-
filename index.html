@@ -7,6 +7,25 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bible Speak">
 <meta name="theme-color" content="#0a1628">
+<!-- SHARING / LINK PREVIEWS -->
+<meta name="description" content="Speak KJV Scripture declarations aloud. Morning, prayers, praises, evening, and in-the-moment words for what you&#8217;re facing.">
+<link rel="canonical" href="https://bible-speak.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bible Speak">
+<meta property="og:title" content="Bible Speak KJV">
+<meta property="og:description" content="Speak KJV Scripture declarations aloud. Morning, prayers, praises, evening, and in-the-moment words for what you&#8217;re facing.">
+<meta property="og:url" content="https://bible-speak.netlify.app/">
+<meta property="og:image" content="https://bible-speak.netlify.app/og-image.png">
+<meta property="og:image:secure_url" content="https://bible-speak.netlify.app/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bible Speak: KJV Scripture Declarations">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bible Speak KJV">
+<meta name="twitter:description" content="Speak KJV Scripture declarations aloud. Morning, prayers, praises, evening, and in-the-moment words for what you&#8217;re facing.">
+<meta name="twitter:image" content="https://bible-speak.netlify.app/og-image.png">
+<meta name="twitter:image:alt" content="Bible Speak: KJV Scripture Declarations">
 <title>Bible Speak KJV</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
@@ -206,6 +225,53 @@ header .subtitle { font-style: italic; font-size: 12px; color: var(--text-dim); 
   margin-bottom: 14px; padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
 }
+
+/* SHARE BUTTON (added) — sits in the card's top-right corner, does not change card layout */
+.share-btn {
+  position: absolute; top: 14px; right: 14px;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(201,168,76,0.10); border: 1px solid var(--border);
+  color: var(--gold); font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 20px; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s; -webkit-appearance: none;
+}
+.share-btn:active { transform: scale(0.94); background: rgba(201,168,76,0.24); border-color: var(--gold); }
+.share-btn svg { width: 11px; height: 11px; display: block; }
+
+/* TOAST (added) */
+#bs-toast {
+  position: fixed; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(10px); opacity: 0; pointer-events: none;
+  background: rgba(6,14,31,0.96); border: 1px solid var(--gold); color: var(--gold-bright);
+  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  padding: 9px 18px; border-radius: 40px; z-index: 300;
+  box-shadow: 0 0 20px rgba(201,168,76,0.18);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#bs-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ADD TO HOME SCREEN NOTE (added) — iOS Safari only */
+#a2hs-note {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  width: calc(100% - 24px); max-width: 456px; z-index: 200;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(6,14,31,0.96); border: 1px solid var(--border); border-radius: 10px;
+  padding: 9px 10px 9px 14px;
+  font-size: 13px; font-style: italic; color: var(--text-dim); line-height: 1.4;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+#a2hs-note span { flex: 1; }
+#a2hs-note strong { color: var(--gold); font-style: normal; }
+#a2hs-note button {
+  flex: 0 0 auto; background: none; border: 1px solid var(--border); border-radius: 50%;
+  width: 26px; height: 26px; color: var(--gold); font-size: 15px; line-height: 1; cursor: pointer;
+  -webkit-appearance: none;
+}
+/* While the note is showing: lift the toast above it and leave room at the bottom of the page */
+body.has-a2hs { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+body.has-a2hs #bs-toast { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 </style>
 </head>
 <body>
@@ -649,6 +715,7 @@ function renderCards(arr, containerId) {
   for(var i=0;i<arr.length;i++){
     var v=arr[i];
     html+='<div class="verse-card">'+
+      shareButtonHTML(containerId, i)+
       '<div class="declaration-tag '+v.cls+'">'+v.tag+'</div>'+
       '<div class="decl-text">'+v.decl+'</div>'+
       '<div class="scripture-divider"><span class="scripture-label">Scripture</span></div>'+
@@ -657,6 +724,7 @@ function renderCards(arr, containerId) {
     '</div>';
   }
   container.innerHTML = html;
+  RENDERED[containerId] = arr; // remember what is on screen so share buttons can read it
 }
 
 function loadVerses(tab){
@@ -717,6 +785,143 @@ function switchTab(name){
   }
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADDED: SHARE, TOAST, HOME-SCREEN NOTE, ANALYTICS
+// ─────────────────────────────────────────────────────────────────────────────
+var SITE_URL = 'https://bible-speak.netlify.app/';
+
+// GoatCounter site code: replace YOURCODE with your code (e.g. 'biblespeak' for
+// https://biblespeak.goatcounter.com). Analytics stay off while it is YOURCODE.
+var GOATCOUNTER_CODE = 'YOURCODE';
+
+var RENDERED = {}; // containerId -> array of verse objects currently shown
+
+function shareButtonHTML(containerId, i){
+  return '<button type="button" class="share-btn" aria-label="Share this declaration" '+
+    'onclick="shareDeclaration(\''+containerId+'\','+i+')">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+
+    '<path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Share</button>';
+}
+
+// One shared share function for every card on every tab.
+function shareDeclaration(containerId, i){
+  var list = RENDERED[containerId];
+  var v = list && list[i];
+  if(!v) return;
+  var text = v.decl + '\n\n\u201C' + v.verse + '\u201D\n\u2014 ' + v.ref + '\n\n' + SITE_URL;
+  bsTrack('share');
+  if(navigator.share){
+    try {
+      navigator.share({ title: 'Bible Speak', text: text }).catch(function(err){
+        if(err && err.name === 'AbortError') return; // user closed the share sheet
+        copyText(text);
+      });
+      return;
+    } catch(e) { /* fall through to copy */ }
+  }
+  copyText(text);
+}
+
+function copyText(text){
+  function legacyCopy(){
+    var ok = false;
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { ta.setSelectionRange(0, text.length); } catch(e) {}
+      ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch(e) { ok = false; }
+    showToast(ok ? 'Copied' : 'Could not copy');
+  }
+  try {
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(function(){ showToast('Copied'); }, legacyCopy);
+      return;
+    }
+  } catch(e) {}
+  legacyCopy();
+}
+
+var toastTimer = null;
+function showToast(msg){
+  var t = document.getElementById('bs-toast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'bs-toast';
+    t.setAttribute('role', 'status');
+    t.setAttribute('aria-live', 'polite');
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.offsetWidth; // restart transition
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+// "Add to Home Screen" note: iOS Safari only, hidden in the home-screen app, dismissal remembered.
+(function(){
+  var KEY = 'bs_a2hs_dismissed';
+  try { if(localStorage.getItem(KEY)) return; } catch(e) {}
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA|FBAN|FBAV|FB_IAB|Instagram|Line\/|Twitter|Snapchat|Pinterest/.test(ua);
+  var standalone = window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  if(!isIOS || !isSafari || standalone) return;
+  var note = document.createElement('div');
+  note.id = 'a2hs-note';
+  note.innerHTML = '<span>Tap <strong>Share</strong>, then <strong>\u2018Add to Home Screen\u2019</strong> to keep Bible Speak on your phone.</span>'+
+    '<button type="button" aria-label="Dismiss">\u00D7</button>';
+  note.querySelector('button').onclick = function(){
+    try { localStorage.setItem(KEY, '1'); } catch(e) {}
+    if(note.parentNode) note.parentNode.removeChild(note);
+    document.body.classList.remove('has-a2hs');
+  };
+  document.body.appendChild(note);
+  document.body.classList.add('has-a2hs');
+})();
+
+// GoatCounter analytics (no cookies, no personal data). Events are queued until count.js has loaded.
+var gcQueue = [];
+function bsTrack(name){
+  if(GOATCOUNTER_CODE === 'YOURCODE') return;
+  gcQueue.push(name);
+  gcFlush();
+}
+var gcTries = 0;
+function gcFlush(){
+  if(window.goatcounter && typeof window.goatcounter.count === 'function'){
+    while(gcQueue.length){
+      var n = gcQueue.shift();
+      try { window.goatcounter.count({ path: n, title: n, event: true }); } catch(e) {}
+    }
+    return;
+  }
+  if(gcTries++ < 60) setTimeout(gcFlush, 250); // wait up to ~15s for the script
+}
+(function(){
+  if(GOATCOUNTER_CODE === 'YOURCODE') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://' + GOATCOUNTER_CODE + '.goatcounter.com/count');
+  document.body.appendChild(s);
+  // First vs returning visit, using a single localStorage flag (no personal data).
+  var returning = false;
+  try {
+    if(localStorage.getItem('bs_visited')) returning = true;
+    else localStorage.setItem('bs_visited', '1');
+  } catch(e) {}
+  bsTrack(returning ? 'returning-visit' : 'first-visit');
+})();
 
 loadVerses('morning');
 </script>
